@@ -1,0 +1,6 @@
+venv/
+.env
+db.sqlite3
+backup_sigev.json
+__pycache__/
+*.pyc

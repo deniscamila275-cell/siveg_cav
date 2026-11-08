@@ -1,0 +1,1475 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIVEG - CAV Posadas</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Paleta Beige */
+            --bg-body-beige: #efe8db;
+            --bg-card-beige: #faf5ec;
+            --bg-card-beige-alt: #f4eee2;
+            --bg-input-beige: #fdfbf7;
+            --border-beige: #ded5c4;
+            --border-beige-dark: #cec2ae;
+            
+            /* Paleta Verde Oscuro */
+            --verde-oscuro-deep: #102d1f;
+            --verde-oscuro-nav: #143d2b;
+            --verde-oscuro-card: #184430;
+            --verde-oscuro-text: #133a28;
+            
+            /* Paleta Verde Claro */
+            --verde-claro-accent: #52b788;
+            --verde-claro-bright: #74c69d;
+            --verde-claro-mint: #a3e4c1;
+            --verde-claro-bg: #eaf5ee;
+            --verde-claro-bg-soft: #d8f3dc;
+            --verde-medio: #2d6a4f;
+        }
+
+        /* Fondo general beige / arena cálido con círculos sutiles en tonos claros */
+        body {
+            background-color: #f7f3eb !important;
+            background-image: 
+                radial-gradient(circle at 8% 14%, rgba(163, 228, 193, 0.40) 0%, rgba(216, 243, 220, 0.15) 180px, transparent 250px),
+                radial-gradient(circle at 92% 16%, rgba(116, 198, 157, 0.35) 0%, rgba(116, 198, 157, 0.10) 220px, transparent 300px),
+                radial-gradient(circle at 50% 50%, rgba(234, 245, 238, 0.60) 0%, rgba(216, 243, 220, 0.18) 280px, transparent 380px),
+                radial-gradient(circle at 14% 78%, rgba(82, 183, 136, 0.25) 0%, rgba(82, 183, 136, 0.06) 210px, transparent 280px),
+                radial-gradient(circle at 86% 85%, rgba(163, 228, 193, 0.32) 0%, rgba(234, 245, 238, 0.10) 260px, transparent 330px);
+            background-attachment: fixed;
+            color: #26332a;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Círculos flotantes decorativos modernos en color claro */
+        .circulo-decorativo {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(1px);
+        }
+        .circulo-1 {
+            width: 360px;
+            height: 360px;
+            top: -90px;
+            left: -90px;
+            background: radial-gradient(circle, rgba(163, 228, 193, 0.45) 0%, rgba(216, 243, 220, 0.2) 60%, transparent 100%);
+            border: 2px solid rgba(82, 183, 136, 0.25);
+        }
+        .circulo-2 {
+            width: 460px;
+            height: 460px;
+            top: 24%;
+            right: -130px;
+            background: radial-gradient(circle, rgba(116, 198, 157, 0.35) 0%, rgba(234, 245, 238, 0.15) 65%, transparent 100%);
+            border: 2px dashed rgba(82, 183, 136, 0.22);
+        }
+        .circulo-3 {
+            width: 330px;
+            height: 330px;
+            bottom: 40px;
+            left: 10%;
+            background: radial-gradient(circle, rgba(216, 243, 220, 0.50) 0%, rgba(246, 241, 232, 0.15) 70%, transparent 100%);
+            border: 1.5px solid rgba(163, 228, 193, 0.40);
+        }
+        .circulo-4 {
+            width: 240px;
+            height: 240px;
+            top: 62%;
+            right: 22%;
+            background: radial-gradient(circle, rgba(82, 183, 136, 0.22) 0%, transparent 70%);
+            border: 1px dotted rgba(82, 183, 136, 0.35);
+        }
+
+        .contenido-elevado {
+            position: relative;
+            z-index: 1;
+        }
+
+        .text-primary, a {
+            color: var(--verde-medio) !important;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--verde-oscuro-deep) !important;
+            text-decoration: underline;
+        }
+        
+        .text-primary-dark {
+            color: var(--verde-oscuro-text) !important;
+        }
+
+        h1, h2, h3, h4, h5, h6, .pregunta-destacada {
+            color: var(--verde-oscuro-text) !important;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        /* Barra superior (Navbar en Verde Oscuro con filete Verde Claro) */
+        .navbar-custom {
+            background-color: var(--verde-oscuro-nav) !important;
+            color: #ffffff;
+            border-bottom: 4px solid var(--verde-claro-accent) !important;
+            box-shadow: 0 4px 15px rgba(16, 45, 31, 0.15);
+        }
+
+        .navbar-custom .brand-text {
+            color: #ffffff !important;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-custom .sub-text {
+            color: var(--verde-claro-mint) !important;
+            letter-spacing: 0.6px;
+        }
+
+        /* Tarjetas en tono Beige cálido */
+        .card, .card-custom {
+            background-color: var(--bg-card-beige) !important;
+            border: 1px solid var(--border-beige) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 6px 18px rgba(20, 61, 43, 0.06) !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card-header-hero {
+            background: linear-gradient(180deg, #faf6ef 0%, #f4ece0 100%) !important;
+            border-bottom: 1px solid var(--border-beige) !important;
+        }
+
+        .contenedor-logos {
+            background-color: var(--bg-card-beige-alt) !important;
+            border: 1px solid var(--border-beige-dark) !important;
+        }
+
+        /* Inputs y Formularios en Beige Marfil con foco Verde */
+        .form-control {
+            background-color: var(--bg-input-beige) !important;
+            border: 1px solid var(--border-beige-dark) !important;
+            border-radius: 10px;
+            color: var(--verde-oscuro-deep);
+            font-size: 0.95rem;
+            padding: 10px 14px;
+            transition: all 0.25s ease;
+        }
+
+        .form-control::placeholder {
+            color: #7d8b82;
+            opacity: 0.8;
+        }
+
+        .form-control:focus {
+            background-color: #ffffff !important;
+            border-color: var(--verde-claro-accent) !important;
+            box-shadow: 0 0 0 0.25rem rgba(82, 183, 136, 0.3) !important;
+            outline: none;
+        }
+
+        .form-label-custom {
+            color: var(--verde-oscuro-card) !important;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        /* Botón Verde Oscuro con realce Verde Claro */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--verde-oscuro-card) 0%, var(--verde-medio) 100%) !important;
+            border: 1px solid var(--verde-claro-accent) !important;
+            color: #ffffff !important;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(20, 61, 43, 0.2);
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, var(--verde-medio) 0%, var(--verde-claro-accent) 100%) !important;
+            border-color: var(--verde-claro-bright) !important;
+            color: #ffffff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(82, 183, 136, 0.35);
+        }
+
+        /* Tarjeta de Respuesta de IA (Fondo Verde Claro Suave) */
+        .card-respuesta-ia {
+            background-color: var(--verde-claro-bg) !important;
+            border: 2px solid var(--verde-claro-accent) !important;
+            border-radius: 18px !important;
+        }
+
+        .caja-asesoramiento {
+            background-color: #f7fbf8 !important;
+            border: 1px solid var(--verde-claro-bright) !important;
+            border-radius: 12px;
+        }
+
+        .badge-ticket {
+            background-color: var(--verde-oscuro-nav);
+            color: #ffffff;
+            font-size: 0.9rem;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--verde-claro-accent);
+        }
+
+        .card-emergencia {
+            background-color: #fff8f8 !important;
+            border: 2px solid #dc3545 !important;
+        }
+
+        .badge-emergencia {
+            background-color: #dc3545;
+            color: #ffffff;
+            font-size: 0.88rem;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid #b02a37;
+            font-weight: 700;
+        }
+
+        .badge-consulta {
+            background-color: var(--verde-medio);
+            color: #ffffff;
+            font-size: 0.88rem;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--verde-claro-accent);
+            font-weight: 600;
+        }
+
+        .badge-pendiente {
+            background-color: #d4a373;
+            color: #2b1d0c;
+            font-size: 0.88rem;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid #bc8a5f;
+            font-weight: 700;
+        }
+
+        /* Botón de enlace directo al trámite en la respuesta */
+        .btn-tramite-directo {
+            background: linear-gradient(135deg, var(--verde-medio) 0%, var(--verde-oscuro-card) 100%) !important;
+            color: #ffffff !important;
+            padding: 9px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none !important;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--verde-claro-accent) !important;
+            box-shadow: 0 4px 10px rgba(45, 106, 79, 0.25);
+            transition: all 0.25s ease;
+            margin: 8px 0;
+        }
+
+        .btn-tramite-directo:hover {
+            background: linear-gradient(135deg, var(--verde-claro-accent) 0%, var(--verde-medio) 100%) !important;
+            color: #ffffff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(20, 61, 43, 0.35);
+        }
+
+        /* Alerta personalizada Verde Claro */
+        .alert-custom-verde {
+            background-color: var(--verde-claro-bg-soft) !important;
+            border: 1px solid var(--verde-claro-bright) !important;
+            color: var(--verde-oscuro-text) !important;
+            border-radius: 10px;
+        }
+
+        /* Texto acento en Verde */
+        .texto-acento {
+            color: var(--verde-medio) !important;
+            font-weight: 700;
+        }
+
+        .icono-destacado-verde {
+            color: var(--verde-claro-accent) !important;
+        }
+
+        .icono-destacado-oscuro {
+            color: var(--verde-oscuro-card) !important;
+        }
+
+        .texto-secundario-cálido {
+            color: #556259 !important;
+        }
+
+        /* Logo pill styling */
+        .logo-item {
+            background: #ffffff;
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-beige);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .logo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(20, 61, 43, 0.12);
+            border-color: var(--verde-claro-accent) !important;
+        }
+
+        @keyframes pulse-arrow {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(5px);
+            }
+        }
+        .anim-dedo-abajo {
+            display: inline-block;
+            animation: pulse-arrow 1.6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Círculos decorativos en color claro de fondo -->
+    <div class="circulo-decorativo circulo-1"></div>
+    <div class="circulo-decorativo circulo-2"></div>
+    <div class="circulo-decorativo circulo-3"></div>
+    <div class="circulo-decorativo circulo-4"></div>
+
+    <!-- Encabezado / Navbar Superior en Verde Oscuro con Acento Verde Claro -->
+    <nav class="navbar navbar-custom py-2 px-4 mb-4">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            
+            <!-- Izquierda: Logo Municipalidad + Nombre del Sistema -->
+            <div class="d-flex align-items-center">
+                <img src="{% static 'img/logo_municipalidad.png' %}" alt="Municipalidad de Posadas" style="height: 46px; object-fit: contain;" class="me-2">
+                <span class="brand-text fs-4 ms-2">SIVEG</span>
+            </div>
+
+            <!-- Centro: Nombre completo -->
+            <div class="text-center d-none d-md-block">
+                <span class="sub-text small fw-bold text-uppercase">SISTEMA INTEGRAL DE ATENCIÓN Y ASESORAMIENTO AL VECINO - CAV ITAEMBÉ GUAZÚ</span>
+            </div>
+
+            <!-- Derecha: Enlaces de Navegación a las otras 2 Pantallas + Logo CAV -->
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'mesa_entrada' %}" class="btn btn-sm btn-outline-light d-flex align-items-center px-2 py-1" style="border-color: rgba(255,255,255,0.4); font-size: 0.82rem;" title="Ir a Mesa de Entrada">
+                    <i class="fa-solid fa-building-user me-1 text-warning"></i><span class="d-none d-lg-inline">Mesa de Entrada</span>
+                </a>
+                <a href="{% url 'panel_gerencial' %}" class="btn btn-sm btn-outline-light d-flex align-items-center px-2 py-1" style="border-color: rgba(255,255,255,0.4); font-size: 0.82rem;" title="Ir a Panel Gerencial">
+                    <i class="fa-solid fa-chart-pie me-1 text-warning"></i><span class="d-none d-lg-inline">Panel Gerencial</span>
+                </a>
+                <img src="{% static 'img/logo_cav.jpeg' %}" alt="Centro de Atención Vecinal" style="height: 46px; object-fit: contain; border-radius: 6px;">
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- ======================================================================== -->
+    <!-- INTERFAZ GRÁFICA (GUI): CAPA DE PRESENTACIÓN / PANTALLA PRINCIPAL        -->
+    <!-- CONTENEDOR PRINCIPAL RESPONSIVE (.container): Centraliza el diseño visual-->
+    <!-- ======================================================================== -->
+    <div class="container pb-5 contenido-elevado">
+        
+        <!-- CONTENEDOR UI: Tarjeta de bienvenida y pregunta inicial -->
+        <div class="card p-4 p-md-5 mb-4 text-center">
+            <h2 class="pregunta-destacada mb-2">¿Querés hacer un trámite y no sabés dónde empezar?</h2>
+            <p class="texto-secundario-cálido fs-5 mb-0">Completá tus datos y comentame abajo que te asesoro de inmediato.</p>
+        </div>
+
+        <!-- CONTENEDOR GRID SYSTEM: Fila responsive (row) dividida en columnas (.col-lg-6) -->
+        <div class="row g-4" id="seccion-consulta">
+            
+            <!-- CONTENEDOR UI (Card): Formulario interactivo de entrada de datos -->
+            <div class="col-lg-6">
+                <div class="card p-4 {% if not respuesta_ia and not busqueda_realizada %}h-100{% else %}mb-4{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="text-primary-dark mb-0">
+                            <i class="fa-solid fa-clipboard-user me-2 icono-destacado-verde"></i>Ingresá tu Consulta
+                        </h4>
+                        {% if respuesta_ia or reclamo_confirmado or solo_info %}
+                            <a href="{% url 'portal_vecino' %}" class="btn btn-sm btn-outline-success">
+                                <i class="fa-solid fa-rotate-right me-1"></i>Nueva Consulta
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    {% if error %}
+                        <div class="alert alert-danger py-2 rounded-3" role="alert">
+                            <i class="fa-solid fa-circle-exclamation me-2"></i>{{ error }}
+                        </div>
+                    {% endif %}
+
+                    <!-- FORMULARIO DE INTERFAZ GRÁFICA: Captura datos y los envía por POST al controlador views.py -->
+                    <form method="POST" action="{% url 'portal_vecino' %}#seccion-consulta" enctype="multipart/form-data" id="form-consulta">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label form-label-custom small">
+                                <i class="fa-solid fa-user me-1 text-success"></i>Nombre y Apellido
+                            </label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Camila Denis" required value="{% if error %}{{ request.POST.nombre|default:'' }}{% endif %}" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,}\s+[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,}.*$" title="Ingresá tu nombre y apellido (solo letras y espacios)">
+                            <div class="form-text small text-muted">Ej: Camila Denis</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dni" class="form-label form-label-custom small">
+                                <i class="fa-solid fa-id-card me-1 text-success"></i>DNI
+                            </label>
+                            <input type="text" inputmode="numeric" class="form-control" id="dni" name="dni" placeholder="Ej: 36268087" required value="{% if error %}{{ request.POST.dni|default:'' }}{% endif %}" pattern="^\d{8}$" maxlength="8" minlength="8" title="Ingresá tu DNI sin puntos ni espacios (8 dígitos)">
+                            <div class="form-text small text-muted">Ej: 36268087</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label form-label-custom small">
+                                <i class="fa-solid fa-phone me-1 text-success"></i>Teléfono de Contacto
+                            </label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ej: 3764187444" required value="{% if error %}{{ request.POST.telefono|default:'' }}{% endif %}" maxlength="18" title="Debe iniciar con característica 37 (ej: 3764187444)">
+                            <div class="form-text small text-muted">Ej: 3764187444</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="detalle" class="form-label form-label-custom small">¿En qué te puedo asesorar hoy?</label>
+                            <textarea class="form-control" id="detalle" name="detalle" rows="4" placeholder="Ej: Necesito pagar la patente del auto, hacer un reclamo por una luz quemada o saber cómo pagar la factura de luz..." required>{% if error %}{{ request.POST.detalle|default:'' }}{% endif %}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary-custom w-100 py-3 fs-5">
+                            <i class="fa-solid fa-robot me-2"></i>Enviar y Asesorarme
+                        </button>
+                    </form>
+                </div>
+
+                {% if es_reclamo or es_emergencia %}
+                    <!-- Tarjeta para aprovechar el espacio en blanco al costado izquierdo cuando la IA tiene texto largo -->
+                    <div class="card p-4 shadow-sm" style="border-left: 6px solid var(--verde-medio) !important; background-color: #ffffff !important;">
+                        <h5 class="mb-1 text-primary-dark fw-bold">
+                            <i class="fa-solid fa-magnifying-glass-location me-2 icono-destacado-verde"></i>¿Ya realizaste un reclamo o trámite?
+                        </h5>
+                        <p class="small text-muted mb-3">
+                            Ingresá tu <strong>N° de Ticket (ej: TCK-2026-0001)</strong> o tu <strong>DNI</strong> para conocer su estado y hacia qué área fue derivado.
+                        </p>
+                        <form method="POST" action="#seccion-seguimiento" class="d-flex flex-column gap-2">
+                            {% csrf_token %}
+                            <input type="text" 
+                                   name="busqueda_ticket" 
+                                   class="form-control" 
+                                   placeholder="Ingresá N° de Ticket o DNI..." 
+                                   value="{% if busqueda_realizada and busqueda_realizada != ' ' %}{{ busqueda_realizada }}{% endif %}" 
+                                   required>
+                            <button type="submit" name="btn_consultar_ticket" value="1" class="btn btn-primary-custom w-100 py-2">
+                                <i class="fa-solid fa-search me-1"></i> Consultar Estado
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Panel de Respuesta de la IA y Ticket -->
+            <div class="col-lg-6">
+                {% if respuesta_ia %}
+                    {% if es_emergencia %}
+                        <!-- CASO 1: POSIBLE EMERGENCIA (CON ENFOQUE PRIORITARIO EN ELÉCTRICAS) -->
+                        <div class="card card-respuesta-ia card-emergencia p-4 shadow-sm mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-danger pb-2">
+                                <h4 class="mb-0 text-danger fw-bold">
+                                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                                    {% if es_emergencia_electrica %}Emergencia Eléctrica Crítica{% else %}Alerta de Emergencia{% endif %}
+                                </h4>
+                                <span class="badge-emergencia">
+                                    <i class="fa-solid fa-phone-volume me-1"></i> Llamar al 911
+                                </span>
+                            </div>
+
+                            <div class="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center rounded-3">
+                                <i class="fa-solid fa-triangle-exclamation fs-3 me-3 text-danger"></i>
+                                <div>
+                                    <strong class="d-block text-danger">PELIGRO INMEDIATO DETECTADO</strong>
+                                    <small class="text-dark">
+                                        {% if es_emergencia_electrica %}
+                                            Alejate del lugar, no toques cables ni objetos en contacto con ellos y mantené alejadas a otras personas.
+                                        {% else %}
+                                            Se detectó una situación de riesgo inminente. Por favor, seguí las pautas de seguridad y comunicate al 911.
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Cuadro de Ubicación Crítica para el 911 / EMSA -->
+                            <div class="alert alert-warning py-2 px-3 mb-3 rounded-3 border-warning d-flex align-items-center">
+                                <i class="fa-solid fa-location-dot fs-3 me-3 text-danger"></i>
+                                <div>
+                                    <strong class="d-block text-dark">
+                                        {% if barrio_vecino or entre_calles_vecino %}
+                                            UBICACIÓN INFORMADA: Barrio {{ barrio_vecino|default:"Posadas" }}{% if entre_calles_vecino %} - {{ entre_calles_vecino }}{% endif %}
+                                        {% else %}
+                                            ¿DÓNDE SE ENCUENTRA EL PELIGRO?
+                                        {% endif %}
+                                    </strong>
+                                    <small class="text-dark">
+                                        {% if barrio_vecino or entre_calles_vecino %}
+                                            Tené esta dirección exacta lista para indicársela inmediatamente al operador durante la llamada al 911 o al 0800 888 3672.
+                                        {% else %}
+                                            Al comunicarte con el 911 o con Energía de Misiones (0800 888 3672), te solicitarán <strong>en qué barrio y entre qué calles o esquinas</strong> está el peligro para despachar la cuadrilla de urgencia.
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+
+                            <p class="small texto-secundario-cálido mb-3">
+                                <strong>Atención prioritaria para:</strong> {{ nombre_vecino }} (DNI: {{ dni_vecino }})
+                            </p>
+                            
+                            <div class="p-3 caja-asesoramiento mb-3 bg-white" style="border: 1px solid #f5c2c7 !important;">
+                                <h6 class="fw-bold text-danger mb-2">
+                                    <i class="fa-solid fa-shield-halved me-1 text-danger"></i>Protocolo y Pautas de Seguridad:
+                                </h6>
+                                <p class="mb-0 text-dark" style="white-space: pre-line; line-height: 1.6;">{{ respuesta_ia|safe }}</p>
+                            </div>
+
+                            {% if es_emergencia_electrica %}
+                                <!-- Botones de Acción Rápida para Emergencias Eléctricas -->
+                                <div class="card p-3 mb-3 bg-white border-danger shadow-sm rounded-3">
+                                    <h6 class="fw-bold text-danger mb-2">
+                                        <i class="fa-solid fa-bolt me-2"></i>Canales de Acción y Derivación Inmediata:
+                                    </h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="tel:911" class="btn btn-danger fw-bold py-2 text-white">
+                                            <i class="fa-solid fa-phone-volume me-2"></i>Llamar al 911 (Peligro para las Personas)
+                                        </a>
+                                        <a href="tel:08008883672" class="btn btn-outline-danger fw-bold py-2">
+                                            <i class="fa-solid fa-phone me-2"></i>Llamar a Energía de Misiones (0800 888 3672)
+                                        </a>
+                                        <a href="https://wa.me/5493764242514" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success fw-bold py-2">
+                                            <i class="fa-brands fa-whatsapp me-2"></i>Abrir WhatsApp de Energía de Misiones
+                                        </a>
+                                        <a href="https://www.energiademisiones.com.ar/" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary fw-bold py-2">
+                                            <i class="fa-solid fa-globe me-2"></i>Sitio Oficial de Energía de Misiones
+                                        </a>
+                                    </div>
+                                    <div class="alert alert-warning small mb-0 mt-3 border-warning">
+                                        <i class="fa-solid fa-circle-exclamation me-1"></i> <strong>Aviso de Canales Externos:</strong> Al pulsar en WhatsApp o en la página web oficial, se abre dicho canal externo. SIGEV <strong>no</strong> afirma haber enviado un reclamo a EMSA ni transfiere datos personales automáticamente. Priorizá siempre la llamada telefónica al 911 o al 0800 888 3672.
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="alert alert-danger small mb-3 border-danger">
+                                <i class="fa-solid fa-circle-exclamation me-1"></i> <strong>Aviso Importante:</strong> El sistema SIGEV no despacha cuadrillas de emergencia automáticamente ni ha notificado a las autoridades. <strong>No se generó ticket administrativo.</strong> Por favor, comunicate telefónicamente de inmediato al 911 o al servicio correspondiente.
+                            </div>
+
+                            {% include 'blog/bloque_evaluacion.html' %}
+                        </div>
+                    {% elif es_reclamo and not reclamo_confirmado %}
+                        <!-- CASO 2: RECLAMO O SOLICITUD PENDIENTE DE CONFIRMACIÓN CON PREGUNTAS Y RESUMEN AUTOMÁTICO -->
+                        <div class="card card-respuesta-ia p-4 shadow-sm mb-4" style="border-color: #d4a373 !important;">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h4 class="mb-0 text-primary-dark">
+                                    <i class="fa-solid fa-bullhorn me-2 icono-destacado-verde"></i>Reclamo / Solicitud Municipal - CAV Itaembé Guazú
+                                </h4>
+                                <span class="badge-pendiente">
+                                    <i class="fa-solid fa-hourglass-half me-1"></i> Confirmación Requerida
+                                </span>
+                            </div>
+
+                            <p class="small texto-secundario-cálido mb-2">
+                                <strong>Solicitud formulada por:</strong> {{ nombre_vecino }} (DNI: {{ dni_vecino }})
+                            </p>
+
+                            <!-- Área Municipal Sugerida -->
+                            <div class="alert alert-light border border-success-subtle mb-3 p-2 px-3 rounded-3">
+                                <span class="badge bg-success text-white me-2">
+                                    <i class="fa-solid fa-building me-1"></i>Área municipal sugerida:
+                                </span>
+                                <strong class="text-dark">{{ organismo_destino }}{% if area_sugerida %} ({{ area_sugerida }}){% endif %}</strong>
+                            </div>
+                            
+                            <!-- Asesoramiento y Preguntas de Seguimiento de la IA -->
+                            <div class="p-3 caja-asesoramiento mb-3">
+                                <h6 class="fw-bold text-primary-dark mb-2">
+                                    <i class="fa-solid fa-robot me-1 icono-destacado-verde"></i>Orientación del Asistente:
+                                </h6>
+                                <p class="mb-0 text-dark" style="white-space: pre-line; line-height: 1.6;">{{ respuesta_ia|safe }}</p>
+                            </div>
+
+                            <!-- Ficha de Resumen Automático y Confirmación de Solicitud -->
+                            <div class="card p-3 mb-3 shadow-sm bg-white" style="border: 1.5px solid var(--verde-claro-accent) !important; border-radius: 14px;">
+                                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                                    <h6 class="fw-bold text-primary-dark mb-0">
+                                        <i class="fa-solid fa-clipboard-list me-2 icono-destacado-verde"></i>Resumen Automático de la Solicitud
+                                    </h6>
+                                    <span class="badge bg-light text-muted border small">Podés corregir datos antes de enviar</span>
+                                </div>
+
+                                <form method="POST" action="{% url 'portal_vecino' %}#seccion-consulta" enctype="multipart/form-data" id="form-confirmar-ticket">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="nombre" value="{{ nombre_vecino }}">
+                                    <input type="hidden" name="dni" value="{{ dni_vecino }}">
+                                    <input type="hidden" name="telefono" value="{{ telefono_vecino }}">
+                                    <input type="hidden" name="detalle" value="{{ detalle_consulta }}">
+
+                                    {% if error_ubicacion %}
+                                    <div class="alert alert-danger d-flex align-items-center mb-3 p-2 px-3 rounded-3 shadow-sm border-danger" role="alert">
+                                        <i class="fa-solid fa-triangle-exclamation fs-5 me-2 text-danger"></i>
+                                        <div class="small">
+                                            <strong>Dato obligatorio requerido:</strong> {{ error_ubicacion }}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="mb-2">
+                                        <label class="form-label form-label-custom small mb-1">Descripción del Problema:</label>
+                                        <div class="p-2 rounded bg-light border small text-dark mb-2">{{ detalle_consulta }}</div>
+                                    </div>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-sm-6">
+                                            <label for="barrio" class="form-label form-label-custom small mb-1">
+                                                <i class="fa-solid fa-location-dot me-1 text-danger"></i>Barrio o Chacra: <span class="text-danger fw-bold">* (obligatorio)</span>
+                                            </label>
+                                            <input type="text" class="form-control form-control-sm {% if error_ubicacion and not barrio_vecino %}is-invalid{% endif %}" id="barrio" name="barrio" value="{{ barrio_vecino|default:'' }}" placeholder="Ej: Villa Sarita, Itaembé Guazú, etc." required>
+                                            <div class="invalid-feedback small">Por favor, indicá el barrio o chacra.</div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="entre_calles" class="form-label form-label-custom small mb-1">
+                                                <i class="fa-solid fa-road me-1 text-secondary"></i>Entre calles o Altura: <span class="text-danger fw-bold">* (obligatorio)</span>
+                                            </label>
+                                            <input type="text" class="form-control form-control-sm {% if error_ubicacion and not entre_calles_vecino %}is-invalid{% endif %}" id="entre_calles" name="entre_calles" value="{{ entre_calles_vecino|default:'' }}" placeholder="Ej: Entre San Martín y Bolívar, N° 1240..." required>
+                                            <div class="invalid-feedback small">Por favor, indicá entre qué calles o altura.</div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label for="referencias" class="form-label form-label-custom small mb-1">
+                                                <i class="fa-solid fa-landmark me-1 text-primary"></i>Referencias cercanas (opcional):
+                                            </label>
+                                            <input type="text" class="form-control form-control-sm" id="referencias" name="referencias" value="{{ referencias_vecino|default:'' }}" placeholder="Ej: Frente a la plaza barrial, cerca del CAPS...">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="archivo_adjunto" class="form-label form-label-custom small mb-1">
+                                            <i class="fa-solid fa-paperclip me-1"></i>Adjuntar fotografía, video o comprobante (opcional):
+                                        </label>
+                                        <input type="file" class="form-control form-control-sm" id="archivo_adjunto" name="archivo_adjunto" accept="image/*,video/*,.pdf,.doc,.docx">
+                                        <div class="form-text small text-muted">Podés adjuntar fotos, videos o documentos. Si tomás fotos o grabás, recordá nunca acercarte si hubiera peligro de cables o caída.</div>
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" name="accion" value="registrar" class="btn btn-primary-custom py-2 fs-6 btn-submit-action">
+                                            <i class="fa-solid fa-file-signature me-2"></i>Registrar solicitud / Iniciar trámite en CAV Itaembé Guazú
+                                        </button>
+                                        <button type="submit" name="accion" value="solo_info" formnovalidate class="btn btn-outline-secondary py-2 fs-6 btn-submit-action bg-white">
+                                            <i class="fa-solid fa-circle-question me-2"></i>Solo necesitaba información
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="alert alert-secondary small mb-3">
+                                <i class="fa-solid fa-circle-info me-1"></i> Tu trámite o solicitud aún no ha sido ingresado al sistema. Presioná <strong>"Registrar solicitud / Iniciar trámite en CAV Itaembé Guazú"</strong> para crear el ticket o <strong>"Solo necesitaba información"</strong> para finalizar la orientación.
+                            </div>
+
+                            {% include 'blog/bloque_evaluacion.html' %}
+                        </div>
+
+                    {% elif es_reclamo and reclamo_confirmado %}
+                        <!-- CASO 3: RECLAMO CONFIRMADO CON TICKET INTERNO SIGEV -->
+                        <div class="card card-respuesta-ia p-4 shadow-sm mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-success-subtle pb-2">
+                                <h4 class="mb-0 text-primary-dark">
+                                    <i class="fa-solid fa-clipboard-check me-2 icono-destacado-verde"></i>Constancia de Solicitud
+                                </h4>
+                                <span class="badge-ticket">
+                                    <i class="fa-solid fa-ticket me-1 icono-destacado-verde"></i>Ticket Interno N°: <strong>{{ nro_ticket }}</strong>
+                                </span>
+                            </div>
+
+                            <!-- Recordatorio destacado: Anotar o guardar número de Ticket -->
+                            <div class="alert alert-success py-3 px-3 mb-3 rounded-3 border-success d-flex align-items-center shadow-sm" style="background-color: #e8f5e9; border: 1.5px solid #2d6a4f !important;">
+                                <i class="fa-solid fa-bookmark fs-2 me-3" style="color: #2d6a4f;"></i>
+                                <div>
+                                    <strong class="d-block fs-6" style="color: #1b4332;">
+                                        <i class="fa-solid fa-pen-to-square me-1"></i>¡Anotá o guardá tu N° de Ticket: <span class="font-monospace text-decoration-underline">{{ nro_ticket }}</span>!
+                                    </strong>
+                                    <small class="text-dark d-block mt-1">
+                                        Es tu comprobante de seguimiento. Recordá anotarlo o guardarlo: podés consultar el estado y avance de tu reclamo en cualquier momento desde este mismo sistema, ingresando tu <strong>N° de Ticket</strong> o tu <strong>DNI</strong> en el buscador de seguimiento.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Estado Inicial Destacado: PENDIENTE DE VALIDACIÓN POR MESA DE ENTRADA -->
+                            <div class="alert alert-warning py-3 px-3 mb-3 rounded-3 border-warning d-flex align-items-center shadow-sm">
+                                <i class="fa-solid fa-clock-rotate-left fs-3 me-3 text-warning"></i>
+                                <div>
+                                    <strong class="d-block text-dark fs-6">ESTADO INICIAL: PENDIENTE</strong>
+                                    <small class="text-dark">
+                                        Tu solicitud ha sido registrada y está <strong>pendiente de validación por Mesa de Entrada</strong> para su análisis y derivación operativa.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Ficha / Constancia Formal del Ticket Registrado -->
+                            <div class="card p-3 mb-3 bg-white border rounded-3 shadow-sm">
+                                <h6 class="fw-bold text-primary-dark border-bottom pb-2 mb-3">
+                                    <i class="fa-solid fa-receipt me-2 icono-destacado-verde"></i>Constancia de Registro Ciudadano
+                                </h6>
+                                <div class="row g-2 small">
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Identificador Único:</span>
+                                        <strong class="text-success fs-6">{{ nro_ticket }}</strong>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Estado Inicial:</span>
+                                        <span class="badge bg-warning text-dark fw-bold px-2 py-1">PENDIENTE DE VALIDACIÓN</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Vecino Asociado:</span>
+                                        <strong>{{ nombre_vecino }}</strong> (DNI: {{ dni_vecino }})
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Teléfono de Contacto:</span>
+                                        <strong>{{ telefono_vecino }}</strong>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Fecha y Hora de Creación:</span>
+                                        <strong>{% if expediente_obj %}{{ expediente_obj.fecha_ingreso|date:"d/m/Y H:i" }}{% else %}Registrado recientemente{% endif %}</strong>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Área Municipal Sugerida:</span>
+                                        <strong>{{ organismo_destino }}{% if area_sugerida %} ({{ area_sugerida }}){% endif %}</strong>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Barrio / Chacra:</span>
+                                        <strong>{% if expediente_obj and expediente_obj.barrio %}{{ expediente_obj.barrio }}{% else %}Posadas{% endif %}</strong>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="text-muted d-block">Entre calles / Altura:</span>
+                                        <strong>{% if expediente_obj and expediente_obj.entre_calles %}{{ expediente_obj.entre_calles }}{% else %}A coordinar con cuadrilla{% endif %}</strong>
+                                    </div>
+                                    {% if expediente_obj and expediente_obj.referencias %}
+                                    <div class="col-sm-12">
+                                        <span class="text-muted d-block">Referencias de ubicación:</span>
+                                        <strong>{{ expediente_obj.referencias }}</strong>
+                                    </div>
+                                    {% endif %}
+                                    <div class="col-sm-12">
+                                        <span class="text-muted d-block">Categoría:</span>
+                                        <strong>{% if expediente_obj and expediente_obj.categoria %}{{ expediente_obj.categoria.nombre_categoria }}{% else %}Servicios Urbanos / Obras Públicas{% endif %}</strong>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <span class="text-muted d-block">Descripción del Reclamo:</span>
+                                        <div class="p-2 rounded bg-light border text-dark mt-1">{{ detalle_consulta }}</div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <span class="text-muted d-block">Archivo Adjunto:</span>
+                                        {% if expediente_obj and expediente_obj.archivo_adjunto %}
+                                            <a href="{{ expediente_obj.archivo_adjunto.url }}" target="_blank" class="text-decoration-none fw-semibold text-primary">
+                                                <i class="fa-solid fa-paperclip me-1"></i>{{ expediente_obj.archivo_adjunto.name }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted fst-italic">Ningún archivo adjuntado</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 caja-asesoramiento mb-3">
+                                <h6 class="fw-bold text-primary-dark mb-2">
+                                    <i class="fa-solid fa-lightbulb me-1 icono-destacado-verde"></i>Instrucciones de Seguimiento:
+                                </h6>
+                                <p class="mb-0 text-dark" style="white-space: pre-line; line-height: 1.6;">{{ respuesta_ia|safe }}</p>
+                            </div>
+
+                            <div class="alert alert-custom-verde small mb-3">
+                                <i class="fa-solid fa-circle-check me-1 icono-destacado-oscuro"></i> 
+                                <strong>Aviso Institucional:</strong> Este comprobante corresponde a un ticket interno de atención ciudadana del sistema SIGEV (Posadas). Se encuentra registrado en estado <strong>PENDIENTE</strong> para su validación por Mesa de Entrada del CAV. No constituye un expediente judicial formal ni sustituye trámites ante prestatarias externas.
+                            </div>
+
+                            {% include 'blog/bloque_evaluacion.html' %}
+                        </div>
+
+                    {% elif solo_info %}
+                        <!-- CASO 5: EL VECINO INDICÓ "SOLO NECESITABA INFORMACIÓN" -->
+                        <div class="card card-respuesta-ia p-4 shadow-sm mb-4" style="border-color: #6c757d !important;">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h4 class="mb-0 text-primary-dark">
+                                    <i class="fa-solid fa-circle-info me-2 text-secondary"></i>Orientación Finalizada
+                                </h4>
+                                <span class="badge bg-secondary text-white px-3 py-2 rounded-pill">
+                                    <i class="fa-solid fa-ban me-1"></i> Sin Ticket Generado
+                                </span>
+                            </div>
+
+                            <div class="alert alert-info py-2 px-3 mb-3 d-flex align-items-center rounded-3">
+                                <i class="fa-solid fa-circle-info fs-4 me-3 text-info"></i>
+                                <div>
+                                    <strong class="d-block">Orientación Informativa Concluida</strong>
+                                    <small>Has indicado que <strong>solo necesitabas información</strong>. No se ha generado ningún ticket de reclamo ni expediente en el sistema.</small>
+                                </div>
+                            </div>
+
+                            <p class="small texto-secundario-cálido mb-3">
+                                <strong>Consulta atendida para:</strong> {{ nombre_vecino }} (DNI: {{ dni_vecino }})
+                            </p>
+
+                            {% if area_sugerida or organismo_destino %}
+                                <div class="alert alert-light border border-secondary-subtle mb-3 p-2 px-3 rounded-3 small">
+                                    <span class="badge bg-secondary text-white me-2">Área de referencia:</span>
+                                    {{ organismo_destino }}{% if area_sugerida %} ({{ area_sugerida }}){% endif %}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="p-3 caja-asesoramiento mb-3">
+                                <h6 class="fw-bold text-primary-dark mb-2">
+                                    <i class="fa-solid fa-circle-question me-1 text-secondary"></i>Detalle de la Orientación:
+                                </h6>
+                                <p class="mb-0 text-dark" style="white-space: pre-line; line-height: 1.6;">{{ respuesta_ia|safe }}</p>
+                            </div>
+
+                            <div class="alert alert-secondary small mb-3">
+                                <i class="fa-solid fa-info me-1"></i> Si en el futuro necesitás solicitar una intervención operativa formal de la cuadrilla municipal, ingresá tu consulta y seleccioná <strong>"Registrar solicitud"</strong>.
+                            </div>
+
+                            {% include 'blog/bloque_evaluacion.html' %}
+                        </div>
+
+                    {% else %}
+                        <!-- CASO 4: CONSULTA INFORMATIVA O DERIVACIÓN A ORGANISMO EXTERNO -->
+                        <div class="card card-respuesta-ia p-4 shadow-sm mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-success-subtle pb-2">
+                                <h4 class="mb-0 text-primary-dark">
+                                    <i class="fa-solid fa-robot me-2 icono-destacado-verde"></i>Orientación Oficial
+                                </h4>
+                                {% if es_derivacion_externa %}
+                                    <span class="badge bg-info text-dark border px-3 py-2 rounded-pill">
+                                        <i class="fa-solid fa-building-columns me-1"></i> Derivación Externa
+                                    </span>
+                                {% else %}
+                                    <span class="badge-consulta">
+                                        <i class="fa-solid fa-circle-info me-1"></i> Consulta Informativa
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <p class="small texto-secundario-cálido mb-3">
+                                <strong>Orientación para:</strong> {{ nombre_vecino }} (DNI: {{ dni_vecino }})
+                            </p>
+
+                            {% if es_derivacion_externa and organismo_info %}
+                                <!-- Botón directo a organismo externo verificado -->
+                                <div class="card p-3 mb-3 bg-white border rounded-3 shadow-sm">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <strong class="text-primary-dark">{{ organismo_info.nombre }}</strong>
+                                        <span class="badge bg-secondary-subtle text-dark border small">{{ organismo_info.sigla }}</span>
+                                    </div>
+                                    <p class="small text-muted mb-3">{{ organismo_info.competencia }}</p>
+                                    <div class="d-grid gap-2 mb-2">
+                                        {% if organismo_info.enlaces_oficiales.tramite_inscripcion %}
+                                            <a href="{{ organismo_info.enlaces_oficiales.tramite_inscripcion }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary-custom py-2 fs-6">
+                                                <i class="fa-solid fa-user-plus me-2"></i>Portal de Inscripción y Autogestión ({{ organismo_info.sigla }})
+                                            </a>
+                                            <a href="{{ organismo_info.enlaces_oficiales.portal_oficial }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success py-2 fs-6 bg-white">
+                                                <i class="fa-solid fa-globe me-2"></i>Sitio Web Oficial ({{ organismo_info.sigla }})
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ organismo_info.enlaces_oficiales.portal_oficial }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary-custom py-2 fs-6">
+                                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>Iniciar trámite online en {{ organismo_info.sigla }}
+                                            </a>
+                                        {% endif %}
+                                        {% if organismo_info.canales_contacto.whatsapp %}
+                                            <a href="{% if organismo_info.canales_contacto.whatsapp_url %}{{ organismo_info.canales_contacto.whatsapp_url }}{% else %}https://wa.me/{{ organismo_info.canales_contacto.whatsapp|cut:' '|cut:'+'|cut:'-'|cut:'('|cut:')' }}{% endif %}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success py-2 fs-6">
+                                                <i class="fa-brands fa-whatsapp me-2"></i>Abrir WhatsApp Oficial ({{ organismo_info.sigla }})
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="p-2 px-3 rounded-2 d-flex flex-wrap justify-content-between align-items-center gap-1 bg-light border small">
+                                        <span class="text-muted"><i class="fa-solid fa-shield-check me-1 text-success"></i>Fuente: {{ organismo_info.fuente_verificacion }}</span>
+                                        <span class="text-muted"><i class="fa-solid fa-calendar-check me-1 text-success"></i>Verificado: {{ organismo_info.fecha_verificacion }}</span>
+                                    </div>
+                                </div>
+                            {% elif tramite_info and tramite_info.tramite_online %}
+                                <!-- Botón de inicio de trámite online directo y verificado -->
+                                <div class="mb-3">
+                                    <a href="{{ tramite_info.enlace_oficial }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary-custom w-100 py-3 fs-5 shadow-sm">
+                                        <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>Iniciar trámite online
+                                    </a>
+                                </div>
+                                <div class="p-2 px-3 mb-3 rounded-3 d-flex flex-wrap justify-content-between align-items-center gap-1" style="background-color: var(--verde-claro-bg-soft); border: 1px solid var(--verde-claro-bright);">
+                                    <small class="text-primary-dark fw-semibold">
+                                        <i class="fa-solid fa-shield-check me-1 text-success"></i>Fuente oficial: {{ tramite_info.fuente }}
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="fa-solid fa-calendar-check me-1 text-success"></i>Verificado: {{ tramite_info.fecha_verificacion }}
+                                    </small>
+                                </div>
+                            {% endif %}
+
+                            {% if tramite_info and tramite_info.id == 'obras_privadas' %}
+                                <div class="alert alert-light border border-success-subtle mb-3 p-3 rounded-3 shadow-sm">
+                                    <h6 class="fw-bold text-primary-dark mb-1">
+                                        <i class="fa-solid fa-map-location-dot me-2 text-success"></i>Zonificación y Plan Urbano Territorial:
+                                    </h6>
+                                    <p class="small text-muted mb-0">
+                                        {% if barrio_vecino %}
+                                            <strong>Ubicación de la obra:</strong> Barrio {{ barrio_vecino }}. La normativa técnica (FOS, FOT, alturas y retiros) se rige según el Código de Edificación para esta zona.
+                                        {% else %}
+                                            Para iniciar una obra o presentar planos en Posadas, recordá tener presente el <strong>barrio, chacra o zona</strong> del terreno para consultar los indicadores urbanísticos correspondientes ante la Secretaría de Planificación Estratégica.
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            {% endif %}
+
+                            {% if tramite_info and tramite_info.id == 'denuncia_obras' %}
+                                <div class="alert alert-light border border-success-subtle mb-3 p-3 rounded-3 shadow-sm">
+                                    <h6 class="fw-bold text-primary-dark mb-1">
+                                        <i class="fa-solid fa-trowel-bricks me-2 text-success"></i>Inspección Técnica de Obras Públicas:
+                                    </h6>
+                                    <p class="small text-muted mb-0">
+                                        {% if barrio_vecino %}
+                                            <strong>Inmueble a inspeccionar:</strong> Barrio {{ barrio_vecino }}. La Municipalidad de Posadas (Obras Públicas) verificará la afectación del muro medianero y el cumplimiento del Código de Edificación.
+                                        {% else %}
+                                            La Secretaría de Obras Públicas de la Municipalidad de Posadas tomará intervención para fiscalizar la obra antirreglamentaria o afectación de medianera reportada.
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="p-3 caja-asesoramiento mb-3">
+                                <h6 class="fw-bold text-primary-dark mb-2">
+                                    <i class="fa-solid fa-lightbulb me-1 icono-destacado-verde"></i>Guía Oficial Validada:
+                                </h6>
+                                <p class="mb-0 text-dark" style="white-space: pre-line; line-height: 1.6;">{{ respuesta_ia|safe }}</p>
+                            </div>
+
+                            <div class="alert alert-custom-verde small mb-3">
+                                <i class="fa-solid fa-circle-check me-1 icono-destacado-oscuro"></i> 
+                                {% if es_derivacion_externa %}
+                                    Orientación sobre organismos externos completada. SIGEV no transfiere datos personales a prestatarias ni reemplaza la presentación formal en su mesa de entrada.
+                                {% else %}
+                                    Asesoramiento informativo completado con información oficial validada. Al tratarse de una consulta sobre trámites, requisitos o pagos, <strong>no requiere la generación de un ticket de reclamo</strong>.
+                                {% endif %}
+                            </div>
+
+                            {% include 'blog/bloque_evaluacion.html' %}
+                        </div>
+                    {% endif %}
+
+{% else %}
+                    <!-- Estado Inicial esperando la pregunta -->
+                    <div class="card p-4 h-100 d-flex flex-column justify-content-center text-center">
+                        <div class="my-auto py-5">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-headset fa-4x icono-destacado-verde"></i>
+                            </div>
+                            <h4 class="text-primary-dark mb-2">Asistente Virtual SIVEG</h4>
+                            <p class="texto-secundario-cálido small max-w-md mx-auto" style="line-height: 1.6;">
+                                Ingresá tu consulta o situación: el asistente identificará si se trata de un <strong>trámite informativo</strong> (te brindará enlaces y requisitos oficiales), un <strong>reclamo municipal</strong> (podrás confirmar la apertura de tu ticket) o una <strong>posible emergencia</strong> (te indicará las medidas de seguridad y comunicación urgente con el 911).
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Sección de Seguimiento: Si ya hizo una consulta o reclamo previo -->
+        {% if not es_reclamo and not es_emergencia or busqueda_realizada %}
+        <div class="mt-5 mb-4" id="seccion-seguimiento">
+            {% if not es_reclamo and not es_emergencia %}
+            <div class="card p-3 p-md-4 shadow-sm" style="border-left: 6px solid var(--verde-medio) !important; background-color: #ffffff !important;">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-3 mb-lg-0">
+                        <h5 class="mb-1 text-primary-dark fw-bold">
+                            <i class="fa-solid fa-magnifying-glass-location me-2 icono-destacado-verde"></i>¿Ya realizaste una consulta o reclamo?
+                        </h5>
+                        <p class="small text-muted mb-0">
+                            Ingresá tu <strong>N° de Ticket (ej: TCK-2026-0001)</strong> o tu <strong>DNI</strong> para conocer su estado actual y hacia qué organismo o área municipal fue derivado.
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <form method="POST" action="#seccion-seguimiento" class="d-flex flex-column flex-sm-row gap-2">
+                            {% csrf_token %}
+                            <input type="text" 
+                                   name="busqueda_ticket" 
+                                   class="form-control" 
+                                   placeholder="Ingresá N° de Ticket (ej: TCK-2026-0001) o DNI..." 
+                                   value="{% if busqueda_realizada and busqueda_realizada != ' ' %}{{ busqueda_realizada }}{% endif %}" 
+                                   required>
+                            <button type="submit" name="btn_consultar_ticket" value="1" class="btn btn-primary-custom px-4 text-nowrap py-2">
+                                <i class="fa-solid fa-search me-1"></i> Consultar Estado
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Resultados de la Consulta de Ticket / Expediente -->
+            {% if busqueda_realizada %}
+            <div class="card p-4 mt-3 shadow-sm" style="background-color: #ffffff !important; border: 2px solid var(--verde-claro-accent) !important;">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                    <h5 class="mb-0 fw-bold text-primary-dark">
+                        <i class="fa-solid fa-clipboard-list me-2 icono-destacado-verde"></i>Seguimiento de Solicitud: "{{ busqueda_realizada|cut:' ' }}"
+                    </h5>
+                    <a href="{% url 'portal_vecino' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fa-solid fa-xmark me-1"></i>Cerrar búsqueda
+                    </a>
+                </div>
+
+                {% if error_busqueda %}
+                    <div class="alert alert-warning d-flex align-items-center rounded-3 p-3 mb-0" role="alert">
+                        <i class="fa-solid fa-circle-exclamation fa-2x me-3 text-warning"></i>
+                        <div>
+                            <strong>No se encontraron registros:</strong>
+                            <p class="mb-0 small">{{ error_busqueda }}</p>
+                        </div>
+                    </div>
+                {% elif tramites %}
+                    <p class="small text-muted mb-3">Se encontró(eron) <strong>{{ tramites.count }}</strong> trámite(s) o reclamo(s) asociado(s):</p>
+                    <div class="row g-3">
+                        {% for tck in tramites %}
+                        <div class="col-12">
+                            <div class="card p-3 p-md-4 border rounded-3 shadow-sm" style="background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom pb-2 mb-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fs-5 fw-bold text-success font-monospace">
+                                            <i class="fa-solid fa-ticket me-1"></i>{{ tck.nro_expediente }}
+                                        </span>
+                                        <span class="text-muted small">| Registrado: {{ tck.fecha_ingreso|date:"d/m/Y H:i" }} hs</span>
+                                    </div>
+                                    <div>
+                                        {% if tck.estado_actual == 'PENDIENTE' %}
+                                            <span class="badge bg-warning text-dark px-3 py-2 fs-6">
+                                                <i class="fa-solid fa-clock-rotate-left me-1"></i>PENDIENTE DE VALIDACIÓN
+                                            </span>
+                                        {% elif tck.estado_actual == 'INGRESADO' %}
+                                            <span class="badge bg-primary text-white px-3 py-2 fs-6">
+                                                <i class="fa-solid fa-folder-open me-1"></i>INGRESADO
+                                            </span>
+                                        {% elif tck.estado_actual == 'DERIVADO' %}
+                                            <span class="badge bg-info text-dark px-3 py-2 fs-6">
+                                                <i class="fa-solid fa-share-from-square me-1"></i>DERIVADO
+                                            </span>
+                                        {% elif tck.estado_actual == 'EN_PROCESO' %}
+                                            <span class="badge bg-primary text-white px-3 py-2 fs-6">
+                                                <i class="fa-solid fa-gears me-1"></i>EN PROCESO
+                                            </span>
+                                        {% elif tck.estado_actual == 'RESUELTO' %}
+                                            <span class="badge bg-success text-white px-3 py-2 fs-6">
+                                                <i class="fa-solid fa-circle-check me-1"></i>RESUELTO
+                                            </span>
+                                        {% elif tck.estado_actual == 'RECHAZADO' %}
+                                            <span class="badge bg-danger text-white px-3 py-2 fs-6">
+                                                <i class="fa-solid fa-ban me-1"></i>RECHAZADO
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary text-white px-3 py-2 fs-6">
+                                                {{ tck.get_estado_actual_display }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Fila Principal Destacada: ORGANISMO O ÁREA HACIA DONDE FUE DERIVADO -->
+                                <div class="alert alert-success d-flex align-items-center py-3 px-3 mb-3 rounded-3 shadow-sm" style="background-color: #d8f3dc; border: 1px solid #74c69d; color: #1b4332;">
+                                    <i class="fa-solid fa-building-circle-arrow-right fa-2x me-3 text-success"></i>
+                                    <div>
+                                        <span class="small text-uppercase fw-bold d-block" style="letter-spacing: 0.5px;">Organismo o Área de Destino (Hacia dónde fue derivado):</span>
+                                        <strong class="fs-5 text-dark">
+                                            {% if tck.organismo_destino %}
+                                                {{ tck.organismo_destino }}
+                                            {% else %}
+                                                Mesa de Entrada del CAV (En proceso de asignación)
+                                            {% endif %}
+                                        </strong>
+                                        <div class="small text-muted mt-1">
+                                            {% if tck.estado_actual == 'PENDIENTE' %}
+                                                Tu solicitud fue ingresada y está siendo revisada por Mesa de Entrada para su posterior despacho operativo.
+                                            {% elif tck.estado_actual == 'DERIVADO' %}
+                                                Tu expediente fue derivado formalmente a esta dependencia para su atención técnica.
+                                            {% elif tck.estado_actual == 'EN_PROCESO' %}
+                                                La cuadrilla o equipo de esta dependencia se encuentra ejecutando las tareas correspondientes.
+                                            {% elif tck.estado_actual == 'RESUELTO' %}
+                                                La gestión fue concluida y resuelta con éxito por este organismo.
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ficha de Datos del Expediente -->
+                                <div class="row g-2 small text-muted">
+                                    <div class="col-md-4">
+                                        <span class="d-block text-dark fw-semibold"><i class="fa-solid fa-user me-1 text-secondary"></i>Vecino Titular:</span>
+                                        <span>{{ tck.nombre_completo }} (DNI: {{ tck.dni_vecino }})</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="d-block text-dark fw-semibold"><i class="fa-solid fa-location-dot me-1 text-danger"></i>Ubicación:</span>
+                                        <span>Barrio {{ tck.barrio|default:"Posadas" }}{% if tck.entre_calles %} - {{ tck.entre_calles }}{% endif %}</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="d-block text-dark fw-semibold"><i class="fa-solid fa-layer-group me-1 text-info"></i>Tipo / Categoría:</span>
+                                        <span>{{ tck.get_tipo_solicitud_display }}{% if tck.categoria %} ({{ tck.categoria.nombre_categoria }}){% endif %}</span>
+                                    </div>
+                                    {% if tck.referencias %}
+                                    <div class="col-12">
+                                        <span class="d-block text-dark fw-semibold"><i class="fa-solid fa-map-pin me-1 text-warning"></i>Referencias:</span>
+                                        <span>{{ tck.referencias }}</span>
+                                    </div>
+                                    {% endif %}
+                                    <div class="col-12 mt-2">
+                                        <span class="d-block text-dark fw-semibold"><i class="fa-solid fa-comment-dots me-1 text-primary"></i>Descripción del Reclamo / Trámite:</span>
+                                        <div class="p-2 rounded bg-light border text-dark mt-1" style="white-space: pre-line;">{{ tck.detalle_consulta }}</div>
+                                    </div>
+                                    {% if tck.archivo_adjunto %}
+                                    <div class="col-12 mt-2">
+                                        <a href="{{ tck.archivo_adjunto.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fa-solid fa-paperclip me-1"></i>Ver comprobante o foto adjuntada
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Servicios Vinculados Sede CAV Itaembé Guazú: Organismos, Páginas y Mapa -->
+        <div class="mt-5">
+            <div class="p-4 p-md-5 rounded-4 shadow-sm text-center" style="background-color: var(--bg-card-beige-alt) !important; border: 1px solid var(--border-beige-dark) !important;">
+                
+                <!-- Título del Cuadro -->
+                <div class="mb-4">
+                    <span class="badge px-3 py-2 text-uppercase mb-2" style="background-color: var(--verde-oscuro-card) !important; color: #ffffff !important; font-size: 0.85rem; letter-spacing: 1px;">
+                        <i class="fa-solid fa-building-flag me-2 text-warning"></i>Servicios Vinculados Sede CAV Itaembé Guazú
+                    </span>
+                    <h5 class="fw-bold text-dark mt-2 mb-0">
+                        <i class="fa-solid fa-location-dot me-1 text-danger"></i>Calle Aguará Guazú y Magnolias, Posadas
+                    </h5>
+                </div>
+
+                <!-- Páginas de los Organismos con Imágenes -->
+                <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 p-3 bg-white rounded-3 border mb-4 shadow-sm">
+                    <div class="logo-item" title="Agencia Tributaria Misiones (ATM)">
+                        <a href="https://atm.misiones.gob.ar/" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center" title="Visitar portal de ATM">
+                            <img src="{% static 'img/logo_atm.png' %}" alt="ATM" style="height: 42px; object-fit: contain;">
+                        </a>
+                    </div>
+                    <div class="logo-item" title="Instituto Provincial de Desarrollo Habitacional (IPRODHA)">
+                        <a href="https://iprodha.misiones.gob.ar/" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center" title="Visitar portal de IPRODHA">
+                            <img src="{% static 'img/logo_iprodha.jpg' %}" alt="IPRODHA" style="height: 42px; object-fit: contain;">
+                        </a>
+                    </div>
+                    <div class="logo-item" title="Energía de Misiones S.A. (EMSA)">
+                        <a href="https://www.energiademisiones.com.ar/" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center" title="Visitar portal oficial de EMSA">
+                            <img src="{% static 'img/logo_emsa.webp' %}" alt="Energía de Misiones - EMSA" style="height: 42px; object-fit: contain;">
+                        </a>
+                    </div>
+                    <div class="logo-item" title="Defensoría del Pueblo de la Ciudad de Posadas">
+                        <a href="https://defensoriadelpueblodeposadas.gob.ar/" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center" title="Visitar portal oficial de la Defensoría del Pueblo">
+                            <img src="{% static 'img/logo_defensoriaDelPueblo.png' %}" alt="Defensoría del Pueblo" style="height: 42px; object-fit: contain;">
+                        </a>
+                    </div>
+                    <div class="logo-item" title="Registro Provincial de las Personas - Misiones">
+                        <a href="https://www.registrocivil.misiones.gov.ar/" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center" title="Visitar portal oficial del Registro Provincial de las Personas">
+                            <img src="{% static 'img/logo_registroDeLasPersonas.png' %}" alt="Registro Provincial de las Personas" style="height: 42px; object-fit: contain;">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Te indico cómo llegar y Mapita Google Maps -->
+                <div class="pt-3">
+                    <div class="d-inline-flex align-items-center justify-content-center gap-2 px-3 py-2 rounded-pill mb-3 shadow-sm border" 
+                         style="background: linear-gradient(135deg, #ffffff 0%, #faf5ec 100%); border-color: var(--border-beige) !important;">
+                        <i class="fa-solid fa-map-location-dot text-success fs-5"></i>
+                        <span class="fw-bold" style="color: var(--verde-oscuro-text); font-size: 1.05rem; letter-spacing: 0.2px;">
+                            ¡Te indico cómo llegar en Google Maps!
+                        </span>
+                        <span class="anim-dedo-abajo fs-5 text-warning" title="Mirá el mapa abajo">
+                            <i class="fa-solid fa-hand-point-down"></i>
+                        </span>
+                    </div>
+
+                    <!-- Pequeño mapa interactivo embebido -->
+                    <div class="rounded-3 overflow-hidden shadow-sm mb-0 border mx-auto" style="max-width: 620px; height: 220px;">
+                        <iframe 
+                            title="Mapa de ubicación Sede CAV Itaembé Guazú"
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            loading="lazy" 
+                            allowfullscreen 
+                            referrerpolicy="no-referrer-when-downgrade" 
+                            src="https://maps.google.com/maps?q=Calle+Aguar%C3%A1+Guaz%C3%BA+y+Magnolias,+Posadas,+Misiones&t=&z=16&ie=UTF8&iwloc=&output=embed">
+                        </iframe>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Propuesta Ciudadana: Sugerir Organismo o Entidad para el CAV -->
+        <div class="mt-5 mb-4" id="seccion-sugerencia-organismo">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden" style="background-color: var(--bg-card-beige-alt) !important; border: 1px solid var(--border-beige-dark) !important;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background-color: var(--verde-claro-bg-soft); color: var(--verde-oscuro-text);">
+                            <i class="fa-solid fa-building-circle-check fa-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1" style="color: var(--verde-oscuro-text);">
+                                ¿Querés que se agregue algún organismo o entidad presente en el CAV Sede Itaembé Guazú?
+                            </h4>
+                            <p class="mb-0 fs-5" style="color: var(--verde-medio); font-weight: 700;">
+                                ¡Hacénoslo saber aquí!
+                            </p>
+                            <p class="small text-muted mt-1 mb-0" style="line-height: 1.5;">
+                                Tu opinión nos ayuda a ampliar la guía de trámites y los canales de atención comunitaria. Escribinos qué entidad te gustaría que sumemos.
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if sugerencia_enviada %}
+                        <div class="alert alert-success d-flex align-items-center rounded-3 p-3 mt-3 mb-0" role="alert" style="background-color: #d8f3dc; border-color: #b7e4c7; color: #1b4332;">
+                            <i class="fa-solid fa-circle-check fa-2x me-3 text-success"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">¡Muchas gracias por tu propuesta!</h6>
+                                <p class="mb-2 small">{{ mensaje_sugerencia }}</p>
+                                <a href="{% url 'portal_vecino' %}#seccion-sugerencia-organismo" class="btn btn-sm btn-outline-success">
+                                    <i class="fa-solid fa-plus me-1"></i>Sugerir otro organismo
+                                </a>
+                            </div>
+                        </div>
+                    {% elif sugerencia_ya_existe %}
+                        <div class="alert alert-info d-flex align-items-start rounded-3 p-3 mt-3 mb-0 shadow-sm" role="alert" style="background-color: #e8f4fd; border: 1.5px solid #63b3ed; color: #1a365d;">
+                            <i class="fa-solid fa-circle-info fa-2x me-3 text-primary mt-1"></i>
+                            <div class="w-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-primary">
+                                        <i class="fa-solid fa-building me-1"></i>¡Este organismo ya se encuentra en el sistema!
+                                    </h6>
+                                    <span class="badge bg-primary text-white px-2 py-1">Ya Incorporado</span>
+                                </div>
+                                <p class="mb-2 small" style="line-height: 1.5;">{{ mensaje_existente }}</p>
+                                
+                                <div class="p-2 mb-2 rounded bg-white border small">
+                                    <div class="mb-1"><strong><i class="fa-solid fa-landmark me-1 text-success"></i>Organismo:</strong> {{ organismo_existente.nombre }} ({{ organismo_existente.sigla }})</div>
+                                    <div class="mb-1"><strong><i class="fa-solid fa-briefcase me-1 text-secondary"></i>Competencia / Trámites:</strong> {{ organismo_existente.competencia }}</div>
+                                    {% if organismo_existente.canales_contacto.atencion_presencial %}
+                                    <div class="mb-1"><strong><i class="fa-solid fa-location-dot me-1 text-danger"></i>Atención Presencial:</strong> {{ organismo_existente.canales_contacto.atencion_presencial }}</div>
+                                    {% endif %}
+                                    {% if organismo_existente.canales_contacto.telefono %}
+                                    <div><strong><i class="fa-solid fa-phone me-1 text-primary"></i>Contacto:</strong> {{ organismo_existente.canales_contacto.telefono }}</div>
+                                    {% elif organismo_existente.canales_contacto.telefono_gratuito %}
+                                    <div><strong><i class="fa-solid fa-phone me-1 text-primary"></i>Contacto:</strong> {{ organismo_existente.canales_contacto.telefono_gratuito }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="alert alert-light border small py-2 px-3 mb-2">
+                                    <i class="fa-solid fa-robot me-1 text-success"></i> <strong>¿Querés hacer una consulta sobre {{ organismo_existente.sigla }}?</strong>
+                                    Podés escribirle directamente a nuestro <strong>Asistente Virtual</strong> en el formulario superior para conocer requisitos o realizar tus trámites.
+                                </div>
+                                <a href="{% url 'portal_vecino' %}#seccion-sugerencia-organismo" class="btn btn-sm btn-outline-primary">
+                                    <i class="fa-solid fa-rotate-left me-1"></i>Hacer otra sugerencia
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <form method="POST" action="#seccion-sugerencia-organismo" class="mt-3">
+                            {% csrf_token %}
+                            <input type="hidden" name="btn_sugerir_organismo" value="1">
+                            
+                            {% if error_sugerencia %}
+                                <div class="alert alert-warning py-2 px-3 small rounded-3 mb-3">
+                                    <i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error_sugerencia }}
+                                </div>
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label for="sugerencia_organismo" class="form-label form-label-custom small">
+                                    <i class="fa-regular fa-comment-dots me-1 text-success"></i>Organismo, entidad o servicio que sugerís sumar
+                                </label>
+                                <textarea 
+                                    name="sugerencia_organismo" 
+                                    id="sugerencia_organismo" 
+                                    rows="3" 
+                                    class="form-control" 
+                                    placeholder="Ej: ANSES, PAMI, IPS Misiones, Registro de la Propiedad, etc."
+                                    required
+                                    oninvalid="this.setCustomValidity('Por favor completá este campo obligatorio.')"
+                                    oninput="this.setCustomValidity('')">{{ sugerencia_previa|default:'' }}</textarea>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <label for="nombre_sugerente" class="form-label form-label-custom small">
+                                        <i class="fa-solid fa-user me-1 text-success"></i>Nombre y Apellido
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="nombre_sugerente" 
+                                        id="nombre_sugerente"
+                                        class="form-control form-control-sm" 
+                                        placeholder="Ej: Camila Denis"
+                                        required
+                                        oninvalid="this.setCustomValidity('Por favor completá este campo obligatorio.')"
+                                        oninput="this.setCustomValidity('')"
+                                        pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,}\s+[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,}.*$"
+                                        title="Ingresá tu nombre y apellido (solo letras)"
+                                        value="{{ nombre_sug_previo|default:'' }}">
+                                    <div class="form-text small text-muted">Ej: Camila Denis</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="contacto_sugerente" class="form-label form-label-custom small">
+                                        <i class="fa-solid fa-phone me-1 text-success"></i>Teléfono de Contacto
+                                    </label>
+                                    <input 
+                                        type="tel" 
+                                        name="contacto_sugerente" 
+                                        id="contacto_sugerente"
+                                        class="form-control form-control-sm" 
+                                        placeholder="Ej: 3764187444"
+                                        required
+                                        oninvalid="this.setCustomValidity('Por favor completá este campo obligatorio.')"
+                                        oninput="this.setCustomValidity('')"
+                                        maxlength="18"
+                                        title="Debe iniciar con característica 37 (ej: 3764187444)"
+                                        value="{{ contacto_sug_previo|default:'' }}">
+                                    <div class="form-text small text-muted">Ej: 3764187444</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary-custom px-4 py-2 fw-semibold shadow-sm">
+                                    <i class="fa-solid fa-paper-plane me-2"></i>Enviar sugerencia
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Restricciones de entrada en tiempo real -->
+    <script>
+        // Si el usuario presiona "Actualizar / Recargar" (F5 o botón de recargar del navegador):
+        // Se borra toda la información previa (búsquedas de tickets, trámites, consultas) y se inicia desde cero limpiamente.
+        try {
+            const navEntries = performance.getEntriesByType && performance.getEntriesByType("navigation");
+            const esRecarga = (navEntries && navEntries.length > 0 && navEntries[0].type === "reload") || 
+                              (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
+            
+            if (esRecarga && (window.location.hash || window.location.search || {% if busqueda_realizada or tramites or error_busqueda or respuesta_ia or reclamo_confirmado or sugerencia_enviada or sugerencia_ya_existe %}true{% else %}false{% endif %})) {
+                window.location.replace("{% url 'portal_vecino' %}");
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Cuando es una carga limpia inicial, asegurar que los formularios arranquen limpios desde cero
+            {% if not respuesta_ia and not busqueda_realizada and not tramites and not reclamo_confirmado and not error and not error_busqueda and not sugerencia_enviada and not sugerencia_ya_existe %}
+            document.querySelectorAll('form').forEach(function(f) {
+                f.reset();
+            });
+            {% endif %}
+
+            const nombreInput = document.getElementById('nombre');
+            const dniInput = document.getElementById('dni');
+            const telefonoInput = document.getElementById('telefono');
+
+            // Nombre y Apellido: Solo letras, espacios y caracteres con acento / ñ
+            if (nombreInput) {
+                nombreInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '');
+                });
+            }
+
+            // DNI: Solo números
+            if (dniInput) {
+                dniInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/\D/g, '');
+                });
+            }
+
+            // Teléfono: Solo números
+            if (telefonoInput) {
+                telefonoInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/\D/g, '');
+                });
+            }
+
+            // Prevención de múltiples clics en envío de formularios
+            let formularioEnviandose = false;
+            document.querySelectorAll('form').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    if (formularioEnviandose) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    formularioEnviandose = true;
+                    setTimeout(function() {
+                        const botones = form.querySelectorAll('button[type="submit"]');
+                        botones.forEach(function(btn) {
+                            btn.disabled = true;
+                        });
+                    }, 40);
+                });
+            });
+
+            // Posicionamiento inteligente de pantalla según el resultado
+            {% if evaluacion_guardada %}
+            const bloqueEvaluacion = document.getElementById('bloque-evaluacion-consulta');
+            if (bloqueEvaluacion) {
+                bloqueEvaluacion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            {% elif respuesta_ia or error or reclamo_confirmado or error_ubicacion %}
+            const seccionConsulta = document.getElementById('seccion-consulta');
+            if (seccionConsulta) {
+                if (window.location.hash !== '#seccion-consulta' && !window.location.hash) {
+                    history.replaceState(null, null, '{% url "portal_vecino" %}#seccion-consulta');
+                }
+                seccionConsulta.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            {% elif sugerencia_enviada or sugerencia_ya_existe or error_sugerencia %}
+            const seccionSugerencia = document.getElementById('seccion-sugerencia-organismo');
+            if (seccionSugerencia) {
+                seccionSugerencia.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            {% elif busqueda_realizada or error_busqueda %}
+            const seccionSeguimiento = document.getElementById('seccion-seguimiento');
+            if (seccionSeguimiento) {
+                seccionSeguimiento.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            {% endif %}
+        });
+    </script>
+</body>
+</html>
