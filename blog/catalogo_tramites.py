@@ -483,6 +483,34 @@ CATALOGO_TRAMITES = [
         'palabras_clave': ['cav', 'centro de atencion vecinal', 'sede cav', 'horario cav', 'las heras', 'itaembe guazu'],
         'canales_presenciales': 'CAV Las Heras (Av. Las Heras 3929) y CAV Itaembé Guazú (Calle Aguará Guazú y Magnolias) de Lunes a Viernes de 07:00 a 18:00 hs.',
         'telefono_contacto': '(0376) 440-9050 | 0800-888-2483'
+    },
+    {
+        'id': 'samsa_factura',
+        'nombre': 'Pago de Factura y Consulta de Deuda de Agua - SAMSA',
+        'categoria': 'Servicios Públicos / Agua Potable',
+        'organismo_responsable': 'Servicios de Aguas de Misiones S.A. (SAMSA)',
+        'descripcion': (
+            'Gestión y pago de facturas del servicio de agua potable y desagües cloacales. '
+            'SAMSA es una empresa privada concesionaria y NO está vinculada al CAV '
+            'ni cuenta con oficinas o cajas de cobro en el Centro de Atención al Vecino (CAV) Itaembé Guazú.'
+        ),
+        'requisitos': [
+            'Número de Cuenta SAMSA (figura en el margen superior derecho de tu factura de agua).',
+            'Medios de pago electrónicos habilitados (Mercado Pago, Macro Click, Red Link, Banelco, tarjeta de débito o crédito).'
+        ],
+        'enlace_oficial': 'https://samsa.com.ar/paga-tu-factura/',
+        'fecha_verificacion': '2026-11-08',
+        'tramite_online': True,
+        'texto_boton': 'Pagar Factura SAMSA Online',
+        'fuente': 'SAMSA - Servicios de Aguas de Misiones S.A.',
+        'palabras_clave': [
+            'samsa', 'pagar el agua', 'pagar agua', 'pago de agua', 'pago del agua',
+            'factura de agua', 'boleta de agua', 'factura del agua', 'boleta del agua',
+            'deuda de agua', 'saldo de agua', 'servicio de agua', 'pagar samsa',
+            'factura de samsa', 'boleta de samsa', 'cuenta de agua', 'medidor de agua'
+        ],
+        'canales_presenciales': 'Sede Central Comercial SAMSA: Av. López y Planes N° 2552, Posadas (06:30 a 14:00 hs). SAMSA NO atiende en el CAV Sede Itaembé Guazú.',
+        'telefono_contacto': '0800-888-9980 (Línea gratuita 24 hs) | (0376) 442-8888'
     }
 ]
 
@@ -705,6 +733,18 @@ def buscar_tramite_por_consulta(texto_consulta: str):
         bool(re.search(r'\b(luz|electricidad|energia)\b.*?\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b', t))
     ):
         return obtener_tramite_por_id('emsa_factura')
+
+    # 19. SAMSA (pago de agua, factura de agua, etc.)
+    if any(k in t for k in [
+        'samsa', 'pagar el agua', 'pagar agua', 'pago de agua', 'pago del agua', 'factura de agua',
+        'boleta de agua', 'factura del agua', 'boleta del agua', 'deuda de agua', 'saldo de agua',
+        'servicio de agua', 'pagar samsa', 'factura de samsa', 'boleta de samsa', 'donde pago el agua',
+        'como pagar el agua', 'donde pagar el agua', 'cuenta de agua', 'medidor de agua'
+    ]) or (
+        bool(re.search(r'\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b.*?\b(agua|samsa|cloaca)\b', t)) or
+        bool(re.search(r'\b(agua|samsa|cloaca)\b.*?\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b', t))
+    ):
+        return obtener_tramite_por_id('samsa_factura')
 
     # CAV General
     return obtener_tramite_por_id('atencion_cav')

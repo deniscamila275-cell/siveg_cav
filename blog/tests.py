@@ -1319,6 +1319,10 @@ class SeguimientoYDerivacionTicketTest(TestCase):
         self.assertContains(response, 'barrio o chacra')
         self.assertContains(response, 'calles, numeración o avenidas')
         self.assertContains(response, 'fotos es opcional')
+        self.assertContains(response, 'Sector de Itaembé Guazú')
+        self.assertContains(response, 'Tu Dirección (Calle y N° / Entre calles)')
+        self.assertContains(response, 'nombre de la vecina o vecino')
+        self.assertContains(response, 'detalle_confirmar')
 
     def test_interfaz_portal_vecino_campos_simplificados_y_circulos_fondo(self):
         """El portal vecino incluye círculos decorativos claros y campos con texto limpio y resumido."""
@@ -1786,6 +1790,61 @@ class TramitesCavItaembeGuazuTest(TestCase):
         self.assertContains(r2, '¡Gracias! Registraste:')
         self.assertContains(r2, 'SI')
         self.assertContains(r2, 'clientes.energiademisiones.com.ar')
+
+    def test_consulta_pago_agua_samsa_empresa_privada_no_cav(self):
+        """Verifica que consultas para pagar el agua deriven a SAMSA, aclaren que es empresa privada no vinculada al CAV e incluyan enlaces oficiales."""
+        r = self.client.post(self.url, {
+            'nombre': 'Camila Denis',
+            'dni': '36268087',
+            'telefono': '3764187444',
+            'detalle': 'quiero pagar el agua'
+        })
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, 'Servicios de Aguas de Misiones S.A. (SAMSA)')
+        self.assertContains(r, 'empresa privada concesionaria')
+        self.assertContains(r, 'NO está vinculada al CAV')
+        self.assertContains(r, 'https://samsa.com.ar/paga-tu-factura/')
+        self.assertContains(r, '0800-888-9980')
+        self.assertNotIn('Es un trámite 100% presencial', r.content.decode('utf-8'))
+
+    def test_emergencia_cable_chispas_detectada_no_crea_ticket_e_incrementa_estadistica_911(self):
+        """Verifica que consultas de emergencia como cables con chispas deriven al 911, no generen ticket en Expediente y sumen al contador '911 Detectados' del Panel Gerencial."""
+        # 1. Verificar estado inicial en panel gerencial
+        r_panel_inicial = self.client.get(reverse('panel_gerencial'))
+        self.assertEqual(r_panel_inicial.status_code, 200)
+        self.assertContains(r_panel_inicial, '911 Detectados')
+        emergencias_previas = r_panel_inicial.context['emergencias_detectadas']
+        total_expedientes_previos = Expediente.objects.count()
+
+        # 2. El vecino consulta por una emergencia crítica (cable con chispas)
+        r_emergencia = self.client.post(self.url, {
+            'nombre': 'Estela Benítez',
+            'dni': '29888777',
+            'telefono': '3764998877',
+            'detalle': 'Hay un cable caído con chispas sobre la vereda frente a casa'
+        })
+        self.assertEqual(r_emergencia.status_code, 200)
+        self.assertContains(r_emergencia, 'Línea 911')
+        self.assertContains(r_emergencia, 'Energía de Misiones')
+
+        # 3. Verificar que NO se haya creado un ticket/expediente operativo (no es reclamo convencional)
+        self.assertEqual(Expediente.objects.count(), total_expedientes_previos)
+        self.assertFalse(Expediente.objects.filter(dni_vecino=29888777).exists())
+
+        # 4. Verificar que se haya registrado en auditoría como emergencia
+        registro = RegistroConsulta.objects.filter(texto_consultado__contains='cable caído con chispas').first()
+        self.assertIsNotNone(registro)
+        self.assertEqual(registro.resultado, 'EMERGENCIA')
+        self.assertEqual(registro.tipo_consulta, 'EMERGENCIA')
+        self.assertIsNone(registro.ticket_asociado)
+
+        # 5. Verificar que el Panel Gerencial ahora refleje el incremento en '911 Detectados'
+        r_panel_despues = self.client.get(reverse('panel_gerencial'))
+        self.assertEqual(r_panel_despues.status_code, 200)
+        self.assertEqual(r_panel_despues.context['emergencias_detectadas'], emergencias_previas + 1)
+        self.assertContains(r_panel_despues, 'Protocolo 911 activado (sin ticket)')
+
+
 
 
 

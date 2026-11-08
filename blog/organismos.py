@@ -568,31 +568,41 @@ ORGANISMOS = [
         'sigla': 'SAMSA',
         'es_externo': True,
         'presente_cav_itaembe': False,
-        'competencia': 'Concesionaria de los servicios de agua potable y desagües cloacales en Posadas y Garupá.',
+        'competencia': 'Empresa privada concesionaria del servicio de agua potable y desagües cloacales en las ciudades de Posadas y Garupá. NO está vinculada al CAV ni cuenta con puesto presencial o cajas de cobro en el Centro de Atención al Vecino (CAV) Sede Itaembé Guazú.',
         'tipos_consultas': [
-            'Reclamos por pérdidas de agua en vereda o calzada.',
+            'Pago online de facturas y regularización de deuda.',
+            'Consulta de saldo y descarga de boleta digital de agua.',
+            'Reclamos por pérdidas de agua en vereda o calzada pública.',
             'Falta de presión o interrupción del suministro de agua potable.',
-            'Pago de facturas y regularización de deuda.',
-            'Desobstrucción de redes cloacales en la vía pública.'
+            'Desobstrucción y mantenimiento de redes cloacales en la vía pública.'
         ],
         'requisitos_oficiales': [
-            'Número de cuenta o punto de suministro.',
-            'Dirección exacta (calle, número y barrio) donde se ubica el inconveniente.'
+            'Número de Cuenta SAMSA (figura en el margen superior derecho de tu factura).',
+            'Medios de pago electrónicos habilitados (Mercado Pago, Macro Click, Red Link, Banelco o tarjetas de débito/crédito).',
+            'Dirección exacta del suministro o inmueble (calle, número y barrio).'
         ],
         'enlaces_oficiales': {
             'portal_oficial': 'https://samsa.com.ar/paga-tu-factura/',
+            'tramite_inscripcion': 'https://samsa.com.ar/paga-tu-factura/',
             'oficina_virtual': 'https://intranet.samsa.com.ar/apex/f?p=1000:200',
             'portal_institucional': 'https://samsa.com.ar/'
         },
         'canales_contacto': {
-            'telefono_atencion': '0800-888-9980',
-            'telefono_linea': '(0376) 442-8888',
-            'atencion_presencial': 'Av. López y Planes N° 2552, Posadas.',
-            'horarios': 'Lunes a Viernes de 07:00 a 14:00 hs'
+            'telefono_atencion': '0800-888-9980 (Línea gratuita 24 hs)',
+            'telefono_linea': '(0376) 442-8888 / 442-8000',
+            'email': 'consultas@samsa.com.ar',
+            'atencion_presencial': 'Av. López y Planes N° 2552 (entre Corrientes y Lavalle), Posadas. No posee atención presencial en el CAV Itaembé Guazú.',
+            'horarios': 'Lunes a Viernes de 06:30 a 14:00 hs (Cajas: de 06:30 a 14:00 hs y de 16:30 a 19:00 hs)'
         },
-        'fuente_verificacion': 'SAMSA - Portal Oficial de Servicios',
-        'fecha_verificacion': '2026-11-01',
-        'palabras_clave': ['samsa', 'agua potable', 'perdida de agua', 'cloaca', 'caño roto', 'falta de agua']
+        'fuente_verificacion': 'SAMSA - Portal Oficial de Servicios de Aguas de Misiones S.A.',
+        'fecha_verificacion': '2026-11-08',
+        'palabras_clave': [
+            'samsa', 'agua potable', 'perdida de agua', 'cloaca', 'caño roto', 'falta de agua',
+            'pagar agua', 'pagar el agua', 'pago de agua', 'pago del agua', 'factura de agua',
+            'boleta de agua', 'factura del agua', 'boleta del agua', 'deuda de agua', 'saldo de agua',
+            'servicio de agua', 'pagar samsa', 'factura de samsa', 'boleta de samsa',
+            'donde pago el agua', 'como pagar el agua', 'donde pagar el agua', 'cuenta de agua', 'medidor de agua'
+        ]
     }
 ]
 
@@ -753,8 +763,17 @@ def identificar_organismo_competente(texto_consulta: str):
     if any(k in t for k in ['conflicto vecinal', 'problemas con vecinos', 'problema con vecinos']):
         return obtener_organismo_por_id('defensoria_pueblo')
 
-    # SAMSA
-    if any(k in t for k in ['samsa', 'perdida de agua', 'cano roto', 'cloaca', 'falta de agua', 'red de agua']):
+    # SAMSA (Servicios de Aguas de Misiones S.A. - Empresa Privada Concesionaria)
+    if any(k in t for k in [
+        'samsa', 'perdida de agua', 'cano roto', 'cloaca', 'falta de agua', 'red de agua',
+        'pagar el agua', 'pagar agua', 'pago de agua', 'pago del agua', 'factura de agua',
+        'boleta de agua', 'factura del agua', 'boleta del agua', 'deuda de agua', 'saldo de agua',
+        'servicio de agua', 'pagar samsa', 'factura de samsa', 'boleta de samsa',
+        'donde pago el agua', 'como pagar el agua', 'donde pagar el agua', 'cuenta de agua', 'medidor de agua'
+    ]) or (
+        bool(re.search(r'\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b.*?\b(agua|samsa|cloaca)\b', t)) or
+        bool(re.search(r'\b(agua|samsa|cloaca)\b.*?\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b', t))
+    ):
         return obtener_organismo_por_id('samsa')
 
     # EMSA (Energía de Misiones)

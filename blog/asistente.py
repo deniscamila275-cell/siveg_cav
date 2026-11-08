@@ -236,6 +236,16 @@ def resolver_tramite_cav_itaembe(texto: str, ctx_ubi: dict = None) -> dict:
         bool(re.search(r'\b(pagar|pago|abonar|deuda|saldo)\b.*?\b(luz|electricidad|energia)\b', t))
     ):
         return None
+    if any(k in t for k in [
+        'pagar el agua', 'pagar agua', 'pago de agua', 'pago del agua', 'factura de agua',
+        'boleta de agua', 'factura del agua', 'boleta del agua', 'pagar samsa', 'agua de mi casa',
+        'donde pago el agua', 'como pagar el agua', 'donde pagar el agua', 'deuda de agua',
+        'saldo de agua', 'servicio de agua'
+    ]) or (
+        bool(re.search(r'\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b.*?\b(agua|samsa|cloaca)\b', t)) or
+        bool(re.search(r'\b(agua|samsa|cloaca)\b.*?\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b', t))
+    ):
+        return None
 
     # --------------------------------------------------------------------------
     # ÁREA 1: TRÁMITES MUNICIPALES (DELEGACIÓN, OBRAS PRIVADAS Y MEDIACIÓN)
@@ -1064,6 +1074,16 @@ def clasificar_consulta(texto: str) -> str:
         bool(re.search(r'\b(pagar|pago|abonar|deuda|saldo)\b.*?\b(luz|electricidad|energia)\b', t))
     ):
         return TIPO_CONSULTA
+    if any(k in t for k in [
+        'pagar el agua', 'pagar agua', 'pago de agua', 'pago del agua', 'factura de agua',
+        'boleta de agua', 'factura del agua', 'boleta del agua', 'pagar samsa', 'agua de mi casa',
+        'donde pago el agua', 'como pagar el agua', 'donde pagar el agua', 'deuda de agua',
+        'saldo de agua', 'servicio de agua'
+    ]) or (
+        bool(re.search(r'\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b.*?\b(agua|samsa|cloaca)\b', t)) or
+        bool(re.search(r'\b(agua|samsa|cloaca)\b.*?\b(pagar|pago|abonar|deuda|saldo|boleta|factura)\b', t))
+    ):
+        return TIPO_CONSULTA
 
     # Si consulta específicamente por la sede central histórica de Defensoría del Pueblo (Calle Buenos Aires) sin indicar trámite en CAV
     if any(k in t for k in ['defensoria', 'defensor']) and not any(k in t for k in ['cav', 'itaembe', 'aguara guazu', 'iniciar', 'tramite', 'registrar']):
@@ -1547,11 +1567,26 @@ def generar_respuesta_consulta(nombre: str, detalle: str, datos_ubicacion: dict 
             )
         elif org_externo['id'] == 'samsa':
             bloque_especifico = (
-                '💧 <strong>PAGO DIRECTO DE FACTURA DE AGUA SAMSA:</strong>\n'
-                'Podés consultar tu saldo y abonar tu servicio de agua potable y desagües cloacales:\n'
-                '👉 <a href="https://samsa.com.ar/paga-tu-factura/" target="_blank" rel="noopener noreferrer" class="fw-bold text-success">Pagar Factura SAMSA Online</a>\n\n'
-                '• Ingresá tu <strong>Número de Cuenta SAMSA</strong> para consultar deuda y pagar con tarjeta o medios electrónicos.\n'
-                '• Accedé a la oficina virtual en: <a href="https://intranet.samsa.com.ar/apex/f?p=1000:200" target="_blank" rel="noopener noreferrer">intranet.samsa.com.ar</a>.\n\n'
+                '💧 <strong>PAGO Y GESTIÓN DE FACTURA DE AGUA - SAMSA (Servicios de Aguas de Misiones S.A.):</strong>\n\n'
+                '⚠️ <strong>Aclaración Importante sobre el CAV:</strong>\n'
+                'El servicio de agua potable y desagües cloacales en Posadas y Garupá es gestionado por <strong>SAMSA</strong>, una <strong>empresa privada concesionaria</strong>. '
+                '<strong>SAMSA NO está vinculada al CAV ni posee oficina, cajas de cobro ni puesto de atención presencial en el Centro de Atención al Vecino (CAV) Itaembé Guazú.</strong> '
+                'Por lo tanto, <strong>no es necesario acudir presencialmente al CAV</strong> para abonar tu boleta de agua.\n\n'
+                '🌐 <strong>PAGO 100% ONLINE DIRECTO (Sin moverte de tu casa):</strong>\n'
+                '👉 <a href="https://samsa.com.ar/paga-tu-factura/" target="_blank" rel="noopener noreferrer" class="fw-bold text-success">Pagar Factura SAMSA Online (Portal Oficial)</a>\n\n'
+                '<strong>Pasos para pagar tu factura de agua:</strong>\n'
+                '1️⃣ Ingresá al portal oficial de pagos de SAMSA: <a href="https://samsa.com.ar/paga-tu-factura/" target="_blank" rel="noopener noreferrer">https://samsa.com.ar/paga-tu-factura/</a>\n'
+                '2️⃣ Colocá tu <strong>Número de Cuenta</strong> (figura en el margen superior derecho de tu factura de agua).\n'
+                '3️⃣ Consultá las boletas pendientes o el saldo de tu cuenta.\n'
+                '4️⃣ Aboná online mediante medios de pago digitales habilitados: <strong>Mercado Pago</strong> (dinero en cuenta, tarjetas de débito/crédito), <strong>Macro Click</strong>, <strong>Red Link</strong>, <strong>Banelco</strong> o código de pago / QR.\n\n'
+                '💻 <strong>Oficina Virtual de Autogestión:</strong>\n'
+                'Podés consultar tu histórico de consumos y descargar boletas en la Oficina Virtual de SAMSA: '
+                '<a href="https://samsa.com.ar/" target="_blank" rel="noopener noreferrer">www.samsa.com.ar</a> (o <a href="https://intranet.samsa.com.ar/apex/f?p=1000:200" target="_blank" rel="noopener noreferrer">intranet.samsa.com.ar</a>).\n\n'
+                '📞 <strong>Canales de Atención al Cliente SAMSA:</strong>\n'
+                '• <strong>Línea Gratuita de Atención (Call Center 24 hs):</strong> <strong>0800-888-9980</strong>\n'
+                '• <strong>Teléfonos Sede:</strong> (0376) 442-8888 / (0376) 442-8000\n'
+                '• <strong>Correo Electrónico:</strong> <a href="mailto:consultas@samsa.com.ar">consultas@samsa.com.ar</a>\n'
+                '• <strong>Oficina Comercial Central (Atención Presencial SAMSA):</strong> Av. López y Planes N° 2552 (entre Corrientes y Lavalle), Posadas. Horarios: Lunes a Viernes de 06:30 a 14:00 hs (Cajas: de 06:30 a 14:00 hs y de 16:30 a 19:00 hs). <em>Recordá que SAMSA no atiende en el CAV Itaembé Guazú.</em>\n\n'
             )
 
         requisitos_html = '\n'.join([f'• {r}' for r in org_externo['requisitos_oficiales']])
@@ -1891,11 +1926,19 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
         # Repregunta de ubicación adaptativa, breve y precisa
         if not (ctx_ubi.get('barrio') and ctx_ubi.get('entre_calles')):
             if not ctx_ubi.get('barrio') and not ctx_ubi.get('entre_calles'):
-                bloque_ubicacion = (
-                    "📍 <strong>Ubicación requerida para la inspección:</strong>\n"
-                    "Para enviar la inspección necesitamos la ubicación exacta. "
-                    "Por favor completá abajo el <strong>barrio o chacra</strong>, y entre qué <strong>calles, numeración o avenidas</strong> se ubica."
-                )
+                if es_obra_muro:
+                    bloque_ubicacion = (
+                        "📍 <strong>Ubicación de la obra y datos de la vecina/o:</strong>\n"
+                        "Para enviar la inspección técnica necesitamos la ubicación exacta. "
+                        "Por favor completá abajo en qué <strong>sector de Itaembé Guazú</strong> (barrio o chacra) te encontrás, y tu <strong>dirección exacta</strong> (calles, numeración o avenidas). "
+                        "En el detalle, recordá agregar el <strong>nombre de la vecina o vecino</strong> (si lo sabés) y su <strong>dirección o número de casa lindera</strong>."
+                    )
+                else:
+                    bloque_ubicacion = (
+                        "📍 <strong>Ubicación requerida para la inspección:</strong>\n"
+                        "Para enviar la inspección necesitamos la ubicación exacta. "
+                        "Por favor completá abajo el <strong>barrio o chacra</strong>, y entre qué <strong>calles, numeración o avenidas</strong> se ubica."
+                    )
             elif not ctx_ubi.get('barrio'):
                 bloque_ubicacion = (
                     f"📍 <strong>Ubicación:</strong> Tenemos registrado sobre {ctx_ubi['entre_calles']}. "
@@ -1986,6 +2029,25 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
                 f'¡Hola, {nombre}!\n\n'
                 f'{explicacion}\n\n'
                 f'{bloque_instrucciones_ruidos}\n\n'
+                f'{bloque_ubicacion}\n\n'
+                f'{nota_fotos}\n\n'
+                f'{cierre_accion}'
+            )
+        elif es_obra_muro:
+            bloque_instrucciones_muro = (
+                "📝 <strong>INSTRUCCIONES PARA COMPLETAR TU DENUNCIA EN EL FORMULARIO DE ABAJO:</strong>\n"
+                "Para que la <strong>Dirección de Obras Privadas (Obras Públicas)</strong> pueda realizar la inspección técnica de la ampliación y constatar la afectación del muro medianero:\n\n"
+                "1️⃣ <strong>Sector de Itaembé Guazú:</strong> Al tratarse del barrio Itaembé Guazú, indicá abajo en qué <strong>sector o etapa</strong> te encontrás (ej: Sector 1, 2, 3, 508 Viviendas, Manzana, etc.).\n"
+                "2️⃣ <strong>Tu Dirección exacta:</strong> Al lado, especificá tu calle y altura o entre qué calles se ubica tu casa.\n"
+                "3️⃣ <strong>Datos de la vecina o vecino denunciado:</strong>\n"
+                "   • En el campo <strong>'Detalle de la Solicitud'</strong> de abajo, agregá si es posible el <strong>nombre y apellido de tu vecina/o</strong> y su <strong>dirección exacta o número de casa/lote lindero</strong> donde amplió el muro.\n"
+                "   • <em>¿No conocés el nombre o número exacto?:</em> Indicá la ubicación relativa (ej: casa lindera a la derecha, portón negro, frente a la plaza) y explicá cómo afectó o apoyó sobre tu muro medianero.\n"
+                "4️⃣ <strong>Fotografías (Opcional):</strong> Si disponés de fotos del muro o de la construcción, podés adjuntarlas para que la cuadrilla cuente con antecedentes visuales antes de acudir al terreno."
+            )
+            cuerpo = (
+                f'¡Hola, {nombre}!\n\n'
+                f'{explicacion}\n\n'
+                f'{bloque_instrucciones_muro}\n\n'
                 f'{bloque_ubicacion}\n\n'
                 f'{nota_fotos}\n\n'
                 f'{cierre_accion}'

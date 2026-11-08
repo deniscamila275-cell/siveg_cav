@@ -625,7 +625,6 @@
                                     <input type="hidden" name="nombre" value="{{ nombre_vecino }}">
                                     <input type="hidden" name="dni" value="{{ dni_vecino }}">
                                     <input type="hidden" name="telefono" value="{{ telefono_vecino }}">
-                                    <input type="hidden" name="detalle" value="{{ detalle_consulta }}">
 
                                     {% if error_ubicacion %}
                                     <div class="alert alert-danger d-flex align-items-center mb-3 p-2 px-3 rounded-3 shadow-sm border-danger" role="alert">
@@ -636,31 +635,37 @@
                                     </div>
                                     {% endif %}
 
-                                    <div class="mb-2">
-                                        <label class="form-label form-label-custom small mb-1">Descripción del Problema:</label>
-                                        <div class="p-2 rounded bg-light border small text-dark mb-2">{{ detalle_consulta }}</div>
+                                    <div class="mb-3">
+                                        <label for="detalle_confirmar" class="form-label form-label-custom small mb-1">
+                                            <i class="fa-solid fa-pen-to-square me-1 text-success"></i>Detalle de la Solicitud / Denuncia: <span class="text-danger fw-bold">*</span>
+                                        </label>
+                                        <textarea class="form-control form-control-sm" id="detalle_confirmar" name="detalle" rows="3" placeholder="Detallá lo sucedido. Agregá el nombre de la vecina/o (si lo sabés) y su dirección exacta..." required>{{ detalle_consulta }}</textarea>
+                                        <div class="form-text small text-muted">
+                                            💡 <strong>Recomendación:</strong> Podés ampliar el relato aquí: agregá si es posible el <strong>nombre de la vecina o vecino</strong> (si lo conocés) y su <strong>dirección o casa/lote lindero</strong> donde amplió el muro.
+                                        </div>
                                     </div>
 
                                     <div class="row g-2 mb-3">
                                         <div class="col-sm-6">
                                             <label for="barrio" class="form-label form-label-custom small mb-1">
-                                                <i class="fa-solid fa-location-dot me-1 text-danger"></i>Barrio o Chacra: <span class="text-danger fw-bold">* (obligatorio)</span>
+                                                <i class="fa-solid fa-location-dot me-1 text-danger"></i>Sector de Itaembé Guazú: <span class="text-danger fw-bold">* (obligatorio)</span>
                                             </label>
-                                            <input type="text" class="form-control form-control-sm {% if error_ubicacion and not barrio_vecino %}is-invalid{% endif %}" id="barrio" name="barrio" value="{{ barrio_vecino|default:'' }}" placeholder="Ej: Villa Sarita, Itaembé Guazú, etc." required>
-                                            <div class="invalid-feedback small">Por favor, indicá el barrio o chacra.</div>
+                                            <input type="text" class="form-control form-control-sm {% if error_ubicacion and not barrio_vecino %}is-invalid{% endif %}" id="barrio" name="barrio" value="{{ barrio_vecino|default:'Itaembé Guazú' }}" placeholder="Ej: Sector 1, Sector 2, Sector 3, Manzana..., Casa..." required>
+                                            <div class="invalid-feedback small">Por favor, indicá el sector de Itaembé Guazú.</div>
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="entre_calles" class="form-label form-label-custom small mb-1">
-                                                <i class="fa-solid fa-road me-1 text-secondary"></i>Entre calles o Altura: <span class="text-danger fw-bold">* (obligatorio)</span>
+                                                <i class="fa-solid fa-road me-1 text-secondary"></i>Tu Dirección (Calle y N° / Entre calles): <span class="text-danger fw-bold">* (obligatorio)</span>
                                             </label>
-                                            <input type="text" class="form-control form-control-sm {% if error_ubicacion and not entre_calles_vecino %}is-invalid{% endif %}" id="entre_calles" name="entre_calles" value="{{ entre_calles_vecino|default:'' }}" placeholder="Ej: Entre San Martín y Bolívar, N° 1240..." required>
-                                            <div class="invalid-feedback small">Por favor, indicá entre qué calles o altura.</div>
+                                            <input type="text" class="form-control form-control-sm {% if error_ubicacion and not entre_calles_vecino %}is-invalid{% endif %}" id="entre_calles" name="entre_calles" value="{{ entre_calles_vecino|default:'' }}" placeholder="Ej: Calle Las Magnolias N° 1240, entre Aguará Guazú y..." required>
+                                            <div class="invalid-feedback small">Por favor, indicá tu dirección exacta.</div>
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="referencias" class="form-label form-label-custom small mb-1">
-                                                <i class="fa-solid fa-landmark me-1 text-primary"></i>Referencias cercanas (opcional):
+                                                <i class="fa-solid fa-landmark me-1 text-primary"></i>Datos de la vecina / Referencias linderas (opcional):
                                             </label>
-                                            <input type="text" class="form-control form-control-sm" id="referencias" name="referencias" value="{{ referencias_vecino|default:'' }}" placeholder="Ej: Frente a la plaza barrial, cerca del CAPS...">
+                                            <input type="text" class="form-control form-control-sm" id="referencias" name="referencias" value="{{ referencias_vecino|default:'' }}" placeholder="Ej: Casa lindera a la derecha, nombre de la vecina, frente a la plaza...">
+                                            <div class="form-text small text-muted">Podés indicar el nombre de la vecina/o denunciado y la casa o lote lindero donde amplió el muro.</div>
                                         </div>
                                     </div>
 

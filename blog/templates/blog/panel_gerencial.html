@@ -54,46 +54,58 @@
                 <div class="card card-stat p-3 bg-white border-start border-4 border-info">
                     <small class="text-muted text-uppercase fw-bold">Trámites / Derivaciones</small>
                     <h2 class="fw-bold text-info mb-0">
-                        {{ consultas|length }}
+                        {{ tramites_derivaciones }}
                     </h2>
                     <small class="text-muted">Orientación a canales oficiales</small>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card card-stat p-3 bg-white border-start border-4 border-danger">
-                    <small class="text-muted text-uppercase fw-bold">Emergencias Asistidas</small>
+                    <small class="text-muted text-uppercase fw-bold">911 Detectados</small>
                     <h2 class="fw-bold text-danger mb-0">
-                        0
+                        {{ emergencias_detectadas }}
                     </h2>
-                    <small class="text-muted">Derivación 911 / EMSA</small>
+                    <small class="text-muted">Protocolo 911 activado (sin ticket)</small>
                 </div>
             </div>
         </div>
 
         <!-- Ficha de Satisfacción Ciudadana (Requisito 8) -->
         <div class="card card-stat p-4 bg-white mb-4">
-            <h5 class="fw-bold text-primary-dark mb-3">
-                <i class="fa-solid fa-square-poll-vertical me-2 text-success"></i>Evaluación de Satisfacción de los Vecinos
-            </h5>
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                <h5 class="fw-bold text-primary-dark mb-0">
+                    <i class="fa-solid fa-square-poll-vertical me-2 text-success"></i>Evaluación de Satisfacción de los Vecinos
+                </h5>
+                {% if total_evaluadas > 0 %}
+                <span class="badge bg-success-subtle text-success border border-success px-3 py-2 fs-6">
+                    <i class="fa-solid fa-chart-pie me-1"></i>{{ porcentaje_positivas }}% de valoración positiva ({{ total_evaluadas }} votos)
+                </span>
+                {% else %}
+                <span class="badge bg-secondary-subtle text-dark border px-3 py-2">Sin evaluaciones registradas aún</span>
+                {% endif %}
+            </div>
             <div class="row text-center g-3">
                 <div class="col-md-4">
                     <div class="p-3 rounded-3 bg-light border">
                         <i class="fa-solid fa-thumbs-up fa-2x text-success mb-2"></i>
-                        <h4 class="fw-bold mb-0">Sí, resolvió</h4>
+                        <h3 class="fw-bold text-success mb-0">{{ satisfaccion_si }}</h3>
+                        <h5 class="fw-bold mb-0">Sí, resolvió</h5>
                         <small class="text-muted">Respuestas afirmativas</small>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="p-3 rounded-3 bg-light border">
                         <i class="fa-solid fa-hand fa-2x text-warning mb-2"></i>
-                        <h4 class="fw-bold mb-0">Parcialmente</h4>
+                        <h3 class="fw-bold text-warning mb-0">{{ satisfaccion_parcial }}</h3>
+                        <h5 class="fw-bold mb-0">Parcialmente</h5>
                         <small class="text-muted">Requiere datos adicionales</small>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="p-3 rounded-3 bg-light border">
                         <i class="fa-solid fa-thumbs-down fa-2x text-secondary mb-2"></i>
-                        <h4 class="fw-bold mb-0">No resolvió</h4>
+                        <h3 class="fw-bold text-secondary mb-0">{{ satisfaccion_no }}</h3>
+                        <h5 class="fw-bold mb-0">No resolvió</h5>
                         <small class="text-muted">Derivación a atención presencial</small>
                     </div>
                 </div>

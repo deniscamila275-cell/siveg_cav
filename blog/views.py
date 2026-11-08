@@ -691,11 +691,42 @@ def mesa_entrada(request):
 # ordenados cronológicamente desde la base de datos.
 # ==============================================================================
 def panel_gerencial(request):
+  # --- POO: MÉTODOS DE CONSULTA Y AGREGACIÓN EN BASE DE DATOS (ORM QuerySets) ---
+  # Recuperación de colecciones de instancias para métricas y auditoría gerencial:
   expedientes = Expediente.objects.all().order_by('-id')
   consultas = RegistroConsulta.objects.all().order_by('-id')
   sugerencias = SugerenciaOrganismo.objects.all().order_by('-id')
+
+  # Métricas agregadas: Conteo dinámico de emergencias 911 detectadas (sin crear reclamo/ticket)
+  emergencias_detectadas = RegistroConsulta.objects.filter(
+      Q(tipo_consulta='EMERGENCIA') | Q(resultado='EMERGENCIA')
+  ).count()
+
+  # Conteo de trámites y derivaciones informativas a canales oficiales
+  tramites_derivaciones = RegistroConsulta.objects.filter(
+      resultado__in=['TRAMITE_DIGITAL', 'DERIVACION_EXTERNA', 'ASESORAMIENTO']
+  ).count()
+
+  # Métricas de satisfacción ciudadana (Requisito 8: Sí / Parcialmente / No)
+  satisfaccion_si = RegistroConsulta.objects.filter(evaluacion_vecino='SI').count()
+  satisfaccion_parcial = RegistroConsulta.objects.filter(evaluacion_vecino='PARCIAL').count()
+  satisfaccion_no = RegistroConsulta.objects.filter(evaluacion_vecino='NO').count()
+  total_evaluadas = satisfaccion_si + satisfaccion_parcial + satisfaccion_no
+  porcentaje_positivas = round((satisfaccion_si / total_evaluadas) * 100) if total_evaluadas > 0 else 0
+
   return render(
       request,
       'blog/panel_gerencial.html',
-      {'expedientes': expedientes, 'consultas': consultas, 'sugerencias': sugerencias},
+      {
+          'expedientes': expedientes,
+          'consultas': consultas,
+          'sugerencias': sugerencias,
+          'emergencias_detectadas': emergencias_detectadas,
+          'tramites_derivaciones': tramites_derivaciones,
+          'satisfaccion_si': satisfaccion_si,
+          'satisfaccion_parcial': satisfaccion_parcial,
+          'satisfaccion_no': satisfaccion_no,
+          'total_evaluadas': total_evaluadas,
+          'porcentaje_positivas': porcentaje_positivas,
+      },
   )
