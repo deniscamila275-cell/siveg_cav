@@ -750,7 +750,7 @@ def resolver_tramite_cav_itaembe(texto: str, ctx_ubi: dict = None) -> dict:
         'solicitar medidor', 'bajada de luz emsa', 'instalar medidor', 'conexion de luz emsa',
         'bajada de luz', 'alta de luz', 'bajada de medidor', 'pedir la luz', 'solicitar conexion de luz',
         'alta del medidor', 'alta medidor', 'solicitar conexion'
-    ]) or (('alta' in t or 'pedir' in t or 'solicitar' in t or 'nueva' in t or 'nuevo' in t) and ('medidor' in t or 'luz' in t) and not any(k in t for k in ['baja', 'corte', 'desconexion', 'sobrefacturacion', 'factura'])):
+    ]) or (('alta' in t or 'pedir' in t or 'solicitar' in t or 'nueva' in t or 'nuevo' in t) and ('medidor' in t or 'luz' in t) and not any(k in t for k in ['baja', 'corte', 'desconexion', 'sobrefacturacion', 'factura', 'foco', 'luminaria', 'alumbrado', 'poste', 'quemad', 'arregl', 'aregl', 'oscur', 'oscut'])):
         return {
             'id': 'cav_emsa_altas',
             'organismo': 'Energía de Misiones S.A. (EMSA) - Oficina Comercial CAV Itaembé Guazú',
@@ -1111,10 +1111,10 @@ def clasificar_consulta(texto: str) -> str:
 
     # 2. Análisis semántico de RECLAMO / SOLICITUD OPERATIVA
     patrones_reclamo = [
-        # Alumbrado (con orden flexible de palabras y conjugación quemo/quemado)
-        r'\b(luz|foco|luminaria|farola|lampara|lamparita)\b.*?\b(quemad[oa]|quemo|se quemo|rot[oa]|apagad[oa]|no prende|no funciona|no anda|titila)\b',
-        r'\b(quemad[oa]|quemo|se quemo|rot[oa]|apagad[oa]|no prende|no funciona|no anda|titila)\b.*?\b(luz|foco|luminaria|farola|lampara|lamparita)\b',
-        r'\b(calle a oscuras|sin luz en la calle|sin alumbrado|tulipa rota)\b',
+        # Alumbrado, focos, postes de luz y luminarias (con orden flexible y tolerancia a errores de tipeo como areglar/oscuto)
+        r'\b(luz|foco|focos|luminaria|luminarias|farola|lampara|lamparita|poste de luz|poste|alumbrado)\b.*?\b(quemad[oa]s?|quemo|se quemo|rot[oa]s?|apagad[oa]s?|no prende|no funciona|no anda|titila|oscur[oa]s?|oscut[oa]s?|arregl\w*|aregl\w*|repar\w*|cambi\w*)\b',
+        r'\b(quemad[oa]s?|quemo|se quemo|rot[oa]s?|apagad[oa]s?|no prende|no funciona|no anda|titila|oscur[oa]s?|oscut[oa]s?|arregl\w*|aregl\w*|repar\w*|cambi\w*)\b.*?\b(luz|foco|focos|luminaria|luminarias|farola|lampara|lamparita|poste de luz|poste|alumbrado)\b',
+        r'\b(calle a oscuras|esta oscuro|esta oscuto|a oscuras|sin luz en la calle|sin alumbrado|tulipa rota|foco quemado|luminarias?)\b',
         # Bacheo y vialidad
         r'\b(bache|baches|pozo|pozos|calle rota|asfalto roto|cordon cuneta|calle intransitable|bacheo)\b',
         # Basura y limpieza
@@ -1134,11 +1134,11 @@ def clasificar_consulta(texto: str) -> str:
         r'\b(vecin[oa])\b.*?\b(amplio|construyo|edifico|ocupo|apoyo|hizo una obra|haciendo una obra)\b.*?\b(muro|medianera|pared|casa|terreno)\b',
         r'\b(obra|construccion|ampliacion|amplaicion)\b.*?\b(clandestina|sin permiso|antirreglamentaria|ilegal|sin autorizacion)\b',
         # Habilitación comercial y apertura de negocio (solicitud municipal ante Habilitaciones y Obras Privadas)
-        r'\b(abrir|poner|iniciar|habilitar|instalar|hacer|quise abrir|quiero abrir|quiero hacer|necesito abrir|solicito abrir)\b.*?\b(negocio|comercio|local|kiosco|almacen|verduleria|tienda)\b',
-        r'\b(negocio|comercio|local|kiosco|almacen|verduleria)\b.*?\b(abrir|poner|habilitar|instalar|iniciar|hacer)\b',
-        r'\b(habilitacion comercial|habilitar negocio|habilitar local|abrir un negocio|abrir negocio|poner un negocio|hacer un negocio|hacer negocio|quiero hacer negocio)\b',
+        r'\b(abrir|poner|iniciar|habilitar|habilito|instalar|hacer|quise abrir|quiero abrir|quiero hacer|quiero habilitar|necesito abrir|necesito habilitar|solicito abrir)\b.*?\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|local|kiosco|almacen|verduleria|tienda|emprendimiento)\b',
+        r'\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|local|kiosco|almacen|verduleria|emprendimiento)\b.*?\b(abrir|poner|habilitar|instalar|iniciar|hacer)\b',
+        r'\b(habilitacion comercial|habilitar negocio|habilitar local|abrir un negocio|abrir negocio|poner un negocio|hacer un negocio|hacer negocio|quiero hacer negocio|habilitar un negocio|habilitar mi negocio)\b',
         # Verbos explícitos de reclamo/queja
-        r'\b(hacer un reclamo|iniciar reclamo|vengan a arreglar|solicito cuadrilla|necesito que arreglen|pedir que manden|mandar a limpiar|arreglen el|solicito intervencion)\b',
+        r'\b(hacer un reclamo|iniciar reclamo|vengan a arreglar|vengan a areglar|venir a arreglar|venir a areglar|solicito cuadrilla|necesito que arreglen|necesito que areglen|pedir que manden|mandar a limpiar|arreglen el|solicito intervencion)\b',
     ]
 
     es_reclamo = any(bool(re.search(p, t)) for p in patrones_reclamo)
@@ -1154,7 +1154,7 @@ def clasificar_consulta(texto: str) -> str:
         r'\b(patente|patentes|patenet|automotor|ipa|generar boleta|boleta patente|boleta de patente|emision de boleta|emision boleta|impuesto|rentas|atm|dgr)\b',
         r'\b(iprodha|vivienda iprodha|cuota iprodha|adjudicatario|ganar una casa|ganar la casa|ganar casa|anotarme para una casa|anotarme a una casa|anotarme en una casa|anotarse para una casa|anotarse a una casa|donde me anoto|donde se anota|donde uno se anota|como anotarme|inscribirme|sorteo de casa|sorteo de casas|sorteo de vivienda|sorteo de viviendas|sorteo iprodha|sorteos iprodha|sorteo habitacional|adjudicacion de vivienda|adjudicar casa|postularme|vivienda social|viviendas sociales|plan de viviendas|conseguir una casa|pedir una casa)\b',
         r'\b(obras privadas|obra privada|planificacion territorial|sistema gop|gop|planurbano|plan urbano|mensura|baldio a edificado|comodato precario|funcionamiento comercial|vallados de obras|vallado de obra|mejor vivir|regularizacion de construcciones|construccion existente|obra sin permiso|certificado final de obra|final de obra|indicadores urbanos|numero de finca|numeros de finca|ampliar mi casa|ampliar la casa|ampliar casa|agrandar la casa|agrandar casa|construir mi casa|construir casa|construir|construccion|planos de obra|plano de construccion|planos|permiso de obra|permiso de edificacion|edificacion|refaccion)\b',
-        r'\b(habilitacion|habilitaciones|habilitacion comercial|habilitacion eventual|habilitacion digital|habilitar negocio|habilitar local|abrir negocio|abrir local|comercio|local comercial|bromatologia|evento|espectaculo|eventos masivos)\b',
+        r'\b(habilitacion|habilitaciones|habilitacion comercial|habilitacion eventual|habilitacion digital|habilitar|habilitar negocio|habilitar local|abrir negocio|abrir local|comercio|local comercial|bromatologia|evento|espectaculo|eventos masivos|negocio|nuegocio|nogio|negosio|negcio|neogcio)\b',
         r'\b(sem|estacionamiento medido|saldo sem|app sem)\b',
         r'\b(descacharrado|operativo descacharrado|dengue|cacharros)\b',
         r'\b(oficina de empleo|empleo|buscar trabajo|conseguir trabajo|curriculum|cv|bolsa de trabajo)\b',
@@ -1171,9 +1171,9 @@ def clasificar_consulta(texto: str) -> str:
 
     # Si hay conflicto o ambigüedad, evaluar verbos rectores:
     if es_reclamo and es_consulta:
-        if re.search(r'\b(como tramitar|requisitos?|saber los requisitos|que necesito|donde se paga|como pagar|horario de|cuanto cuesta)\b', t):
+        if re.search(r'\b(como tramitar|como denunciar|requisitos?|saber los requisitos|que necesito|que pasos|pasos para|pasos debo|como habilitar|donde habilitar|donde se paga|como pagar|horario de|cuanto cuesta)\b', t):
             return TIPO_CONSULTA
-        if re.search(r'\b(en que|que epoca|que mes|que meses|cuando|como|donde|requisitos?|se puede|permiso|normativa|ordenanza|horario)\b', t) and not re.search(r'\b(tengo|solicito|vengan|arreglen|limpien|poden|hacer reclamo|iniciar reclamo)\b', t):
+        if re.search(r'\b(en que|que epoca|que mes|que meses|cuando|como|donde|requisitos?|se puede|permiso|normativa|ordenanza|horario)\b', t) and not re.search(r'\b(tengo|solicito|vengan|venir|arregl\w*|aregl\w*|repar\w*|limpien|poden|hacer reclamo|iniciar reclamo|quemad[oa]s?|quemo|rot[oa]s?|apagad[oa]s?|no prende|no anda|oscur[oa]s?|oscut[oa]s?|foco|luminaria|bache|pozo|perdida|basura|denunci\w*)\b', t):
             return TIPO_CONSULTA
         return TIPO_RECLAMO
 
@@ -1373,14 +1373,21 @@ def generar_guia_pasos_tramite(tramite_id: str) -> str:
         )
     elif tramite_id == 'habilitaciones_comerciales':
         return (
-            '🏪 <strong>PORTAL DE HABILITACIONES COMERCIALES Y EVENTOS ONLINE:</strong>\n'
-            'Trámite 100% digital para la apertura de locales y realización de eventos:\n'
-            '👉 <a href="https://datos.posadas.gov.ar/habilitaciones-municipales/" target="_blank" rel="noopener noreferrer" class="fw-bold text-success">Portal de Habilitaciones Comerciales Posadas</a>\n\n'
-            '<strong>Pasos para habilitar tu negocio o evento:</strong>\n'
-            '1️⃣ Ingresá al <a href="https://datos.posadas.gov.ar/habilitaciones-municipales/" target="_blank" rel="noopener noreferrer">Portal de Habilitaciones</a> con los datos del titular o apoderado.\n'
-            '2️⃣ Seleccioná el tipo de trámite: Habilitación Comercial Nueva, Modificación de Rubro o Habilitación Eventual para Espectáculos.\n'
-            '3️⃣ Cargá la documentación requerida (DNI/Estatuto, contrato de alquiler o título, certificado de Bomberos y libre deuda municipal).\n'
-            '4️⃣ Realizá el seguimiento digital hasta la emisión del certificado final con código QR.\n\n'
+            '🏗️ <strong>PASO 1 - OBRAS PRIVADAS Y PLANIFICACIÓN TERRITORIAL (CERTIFICADO DE FUNCIONAMIENTO COMERCIAL Y PLANOS):</strong>\n'
+            'Todo local o negocio (especialmente si funciona en una ampliación de tu vivienda o local a adecuar) requiere verificar la factibilidad edilicia, planos aprobados y el <strong>Certificado de Funcionamiento Comercial</strong> en el Sistema GOP de Obras Privadas (con atención presencial en el <strong>CAV Itaembé Guazú</strong>):\n'
+            '👉 <a href="https://posadas.gestiondeobrasprivadas.com.ar/" target="_blank" rel="noopener noreferrer" class="btn-tramite-directo">'
+            '<i class="fa-solid fa-building-circle-check me-2"></i>Sistema GOP - Obras Privadas Posadas (posadas.gestiondeobrasprivadas.com.ar)</a>\n'
+            '• <strong>Guía de Trámites de Planificación Urbana y Obras Privadas:</strong> <a href="https://posadas.gov.ar/planurbano/guia-de-tramites/" target="_blank" rel="noopener noreferrer" class="fw-bold text-success">https://posadas.gov.ar/planurbano/guia-de-tramites/</a>\n\n'
+            '🏪 <strong>PASO 2 - DIRECCIÓN GENERAL DE HABILITACIONES COMERCIALES (ALTA DEL COMERCIO):</strong>\n'
+            'Una vez verificadas las condiciones del inmueble, gestioná el alta comercial según tu rubro:\n'
+            '👉 <a href="https://posadas.gov.ar/guiatramite" target="_blank" rel="noopener noreferrer" class="btn-tramite-directo">'
+            '<i class="fa-solid fa-store me-2"></i>Guía Oficial de Trámites y Habilitaciones (posadas.gov.ar/guiatramite)</a>\n'
+            '• <strong>Portal de Habilitaciones Municipales y Eventos Online:</strong> <a href="https://datos.posadas.gov.ar/habilitaciones-municipales/" target="_blank" rel="noopener noreferrer" class="fw-bold text-success">https://datos.posadas.gov.ar/habilitaciones-municipales/</a>\n\n'
+            '<strong>Pasos completos para habilitar tu negocio en Posadas:</strong>\n'
+            '1️⃣ <strong>Factibilidad y Planos en Obras Privadas (Sistema GOP):</strong> Verificá que el local cumpla con el Código de Edificación, indicadores urbanos y planos visados en <a href="https://posadas.gestiondeobrasprivadas.com.ar/" target="_blank" rel="noopener noreferrer">posadas.gestiondeobrasprivadas.com.ar</a> o en el módulo de <strong>Obras Privadas del CAV Itaembé Guazú</strong>.\n'
+            '2️⃣ <strong>Documentación obligatoria:</strong> Reuní tu DNI, constancia de CUIT (ATM y ARCA/AFIP), título de propiedad o contrato de alquiler sellado, libre deuda de TGI y certificado de Bomberos de la Policía de Misiones.\n'
+            '3️⃣ <strong>Bromatología y Carnet Sanitario (si vendés o manipulás alimentos):</strong> Podés liquidar y abonar la tasa del Carnet Sanitario directamente en la delegación municipal del <strong>CAV Itaembé Guazú</strong>.\n'
+            '4️⃣ <strong>Solicitud de Habilitación Comercial:</strong> Presentá la documentación en <a href="https://posadas.gov.ar/guiatramite" target="_blank" rel="noopener noreferrer">posadas.gov.ar/guiatramite</a> / <a href="https://datos.posadas.gov.ar/habilitaciones-municipales/" target="_blank" rel="noopener noreferrer">Portal de Habilitaciones</a> o presencialmente en el CAV Itaembé Guazú o Edificio Central (San Martín 1579).\n\n'
         )
     elif tramite_id == 'oficina_empleo':
         return (
@@ -1780,9 +1787,11 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
 
     es_obra_muro = any(k in t for k in ['muro', 'medianera', 'ampliacion', 'amplaicion', 'amplio', 'obra', 'construccion', 'pared']) and any(k in t for k in ['vecin', 'ocupo', 'apoyo', 'rompio', 'clandestin', 'sin permiso', 'antirreglamentar', 'denuncia', 'invasi', 'edifico', 'tiro'])
     es_habilitacion_negocio = (
-        any(k in t for k in ['negocio', 'comercio', 'local', 'kiosco', 'almacen', 'verduleria', 'tienda']) and
-        any(k in t for k in ['abrir', 'poner', 'iniciar', 'habilitar', 'emprender', 'instalar', 'quise', 'quiero', 'solicitud', 'habilitacion', 'hacer'])
-    ) or bool(re.search(r'\b(abrir|poner|iniciar|habilitar|instalar|hacer|quise abrir|quiero abrir|quiero hacer)\b.*?\b(negocio|comercio|local|kiosco|almacen|verduleria|tienda)\b', t))
+        any(k in t for k in ['negocio', 'nuegocio', 'nogio', 'negosio', 'negcio', 'neogcio', 'comercio', 'local', 'kiosco', 'almacen', 'verduleria', 'tienda', 'emprendimiento']) and
+        any(k in t for k in ['abrir', 'poner', 'iniciar', 'habilitar', 'habilito', 'emprender', 'instalar', 'quise', 'quiero', 'solicitud', 'habilitacion', 'hacer', 'pasos'])
+    ) or bool(re.search(r'\b(abrir|poner|iniciar|habilitar|habilito|instalar|hacer|quise abrir|quiero abrir|quiero hacer|quiero habilitar)\b.*?\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|local|kiosco|almacen|verduleria|tienda|emprendimiento)\b', t)) or (
+        bool(re.search(r'\b(quiero habilitar|necesito habilitar|para habilitar|habilitar un|habilitar mi)\b', t)) and not any(k in t for k in ['clave', 'medidor', 'luz', 'emsa', 'atm', 'dni', 'licencia'])
+    )
 
     es_denuncia_ruidos = (
         any(k in t for k in [
@@ -1810,22 +1819,30 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
         if not ctx_ubi.get('entre_calles'):
             ctx_ubi['entre_calles'] = 'Calle Aguará Guazú y Magnolias (Sede CAV)'
 
+    es_alumbrado_emsa = (
+        any(k in t for k in [
+            'luz quemada', 'foco', 'focos', 'luminaria', 'luminarias', 'farola', 'alumbrado',
+            'a oscuras', 'esta oscuro', 'esta oscuto', 'oscuridad', 'tulipa', 'poste de luz'
+        ]) or bool(re.search(r'\b(luz|foco|focos|luminaria|luminarias|poste)\b.*?\b(quemad[oa]s?|quemo|rot[oa]s?|apagad[oa]s?|no prende|no anda|oscur[oa]s?|oscut[oa]s?|arregl\w*|aregl\w*|repar\w*)\b', t))
+        or bool(re.search(r'\b(quemad[oa]s?|quemo|rot[oa]s?|apagad[oa]s?|no prende|no anda|oscur[oa]s?|oscut[oa]s?|arregl\w*|aregl\w*|repar\w*)\b.*?\b(luz|foco|focos|luminaria|luminarias|poste)\b', t))
+    )
+
     if info_cav:
         area = info_cav['area']
         organismo = info_cav['organismo']
         cod_categoria = info_cav.get('cod_categoria', 100)
         descripcion_intervencion = info_cav['gestion_programada']
         explicacion = info_cav['explicacion']
-    elif any(k in t for k in ['luz quemada', 'foco', 'luminaria', 'farola', 'alumbrado', 'a oscuras', 'tulipa']) or (
-        bool(re.search(r'\b(luz|foco|luminaria)\b.*?\b(quemad[oa]|quemo|rot[oa]|no prende|no anda)\b', t))
-    ):
-        area = 'Alumbrado Público y Servicios Urbanos'
-        organismo = 'Municipalidad de Posadas - Servicios Urbanos'
+    elif es_alumbrado_emsa:
+        area = 'Alumbrado Público, Luminarias y Red Eléctrica (Servicios Urbanos / EMSA)'
+        organismo = 'Municipalidad de Posadas - Servicios Urbanos (Alumbrado Público) / Energía de Misiones S.A. (EMSA)'
         cod_categoria = 101
-        descripcion_intervencion = 'reparación, recambio de luminarias o verificación técnica del alumbrado público'
+        descripcion_intervencion = 'reparación o recambio de foco/luminaria en poste de luz y verificación de red eléctrica junto a EMSA y Alumbrado Público'
         explicacion = (
-            '💡 Corresponde solicitar la <strong>reparación o recambio de luminarias</strong> ante el área de '
-            '<strong>Alumbrado Público y Servicios Urbanos</strong> para solucionar la iluminación en la zona.'
+            '💡 <strong>REPARACIÓN DE LUMINARIAS, FOCOS Y POSTES DE LUZ (ALUMBRADO PÚBLICO Y ENERGÍA DE MISIONES - EMSA):</strong>\n'
+            'Para solucionar la falta de iluminación y reparar el foco o luminaria del poste de luz en tu cuadra, intervienen de forma coordinada:\n'
+            '• ⚡ <strong>Energía de Misiones S.A. (EMSA):</strong> Responsable del suministro eléctrico en el tendido y postes de luz, conexión de red de alumbrado, fusibles aéreos y guardia técnica en Posadas e Itaembé Guazú.\n'
+            '• 🏛️ <strong>Municipalidad de Posadas - Dirección de Alumbrado Público (Servicios Urbanos):</strong> Responsable del recambio de focos y artefactos LED, fotocélulas, brazos de luminarias y mantenimiento del alumbrado urbano.'
         )
     elif any(k in t for k in ['bache', 'pozo', 'asfalto', 'cordon cuneta', 'calle']):
         area = 'Obras Viales y Bacheo'
@@ -1953,7 +1970,11 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
             ref_str = f" (Ref: {ctx_ubi['referencias']})" if ctx_ubi.get('referencias') else ""
             bloque_ubicacion = f"📍 <strong>Ubicación registrada:</strong> Barrio {ctx_ubi['barrio']} - {ctx_ubi['entre_calles']}{ref_str}."
 
-        nota_fotos = "📷 <em>Adjuntar fotos es opcional (solo si disponés de comprobantes o imágenes).</em>"
+        nota_fotos = (
+            "📷 <strong>Ayudanos a ver el problema:</strong>\n"
+            "Si tenés una foto/video, adjuntala para que el equipo que revise tu reclamo pueda entender mejor la situación. "
+            "<em>(Adjuntar fotos es opcional).</em>"
+        )
 
         cierre_accion = (
             f"👉 Completá o confirmá los datos en el recuadro de abajo y presioná <strong>'Registrar solicitud'</strong> "
@@ -1995,11 +2016,19 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
             )
         elif es_habilitacion_negocio:
             bloque_preguntas_negocio = (
-                "📋 <strong>Requisitos principales para abrir o hacer un negocio:</strong>\n"
-                "• <strong>Plano y adecuación edilicia (Obras Públicas / Obras Privadas):</strong> Si el negocio funcionará en una <strong>ampliación de tu casa</strong> o local a construir, debe contar con plano visado por profesional matriculado y cumplir con los retiros y Código de Edificación.\n"
-                "• <strong>Documentación del inmueble:</strong> DNI del titular, título de propiedad o contrato de alquiler con sellado de ley.\n"
-                "• <strong>Seguridad contra incendios:</strong> Certificado de Bomberos de la Policía de Misiones y libre deuda de tasas municipales.\n\n"
-                "❓ <strong>Preguntas para armar tu solicitud:</strong>\n"
+                "🌐 <strong>PORTALES OFICIALES DIRECTOS (OBRAS PRIVADAS Y HABILITACIONES):</strong>\n"
+                "👉 <a href=\"https://posadas.gestiondeobrasprivadas.com.ar/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-tramite-directo\">"
+                "<i class=\"fa-solid fa-building-circle-check me-2\"></i>Sistema GOP - Obras Privadas (Certificado de Funcionamiento Comercial y Planos)</a>\n"
+                "👉 <a href=\"https://posadas.gov.ar/planurbano/guia-de-tramites/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-tramite-directo\">"
+                "<i class=\"fa-solid fa-map-location-dot me-2\"></i>Guía de Trámites de Planificación Urbana y Obras Privadas</a>\n"
+                "👉 <a href=\"https://posadas.gov.ar/guiatramite\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-tramite-directo\">"
+                "<i class=\"fa-solid fa-store me-2\"></i>Guía Oficial de Habilitaciones Comerciales (posadas.gov.ar/guiatramite)</a>\n"
+                "• <strong>Portal de Habilitaciones Municipales:</strong> <a href=\"https://datos.posadas.gov.ar/habilitaciones-municipales/\" target=\"_blank\" rel=\"noopener noreferrer\">https://datos.posadas.gov.ar/habilitaciones-municipales/</a>\n\n"
+                "📋 <strong>Requisitos principales y pasos para habilitar o abrir un negocio:</strong>\n"
+                "• <strong>1. Plano, adecuación edilicia y Certificado de Funcionamiento Comercial (Obras Públicas / Obras Privadas - Sistema GOP):</strong> Si el negocio funcionará en una <strong>ampliación de tu casa</strong> o en un local comercial, debe contar con plano visado y factibilidad edilicia en el Sistema GOP (<a href=\"https://posadas.gestiondeobrasprivadas.com.ar/\" target=\"_blank\" rel=\"noopener noreferrer\">posadas.gestiondeobrasprivadas.com.ar</a>). Podés asesorarte presencialmente en el módulo de <strong>Obras Privadas del CAV Itaembé Guazú</strong>.\n"
+                "• <strong>2. Documentación del inmueble y titular:</strong> DNI, constancia de CUIT (ATM y ARCA/AFIP), título de propiedad o contrato de alquiler con sellado de ley y libre deuda de TGI.\n"
+                "• <strong>3. Seguridad y Bromatología:</strong> Certificado de Bomberos de la Policía de Misiones y, si es del rubro alimenticio/gastronómico, Carnet Sanitario (se tramita en el CAV Itaembé Guazú).\n\n"
+                "❓ <strong>Preguntas para armar tu solicitud en el CAV:</strong>\n"
                 "1️⃣ <strong>Rubro o actividad:</strong> ¿De qué rubro será el negocio? (ej: almacén, kiosco, verdulería, indumentaria, gastronomía, peluquería, taller, etc.).\n"
                 "2️⃣ <strong>Tipo de inmueble:</strong> ¿El comercio funcionará en una <strong>ampliación de tu casa / vivienda</strong> o en un local comercial independiente? "
                 "<em>(Si es en una ampliación de tu vivienda, intervenimos junto a Obras Públicas / Obras Privadas para verificar planos y normativa de edificación).</em>"
@@ -2033,6 +2062,48 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
                 f'{nota_fotos}\n\n'
                 f'{cierre_accion}'
             )
+        elif es_alumbrado_emsa:
+            org_emsa = obtener_organismo_por_id('emsa')
+            cuerpo = (
+                f'¡Hola, {nombre}! Te compartimos la orientación oficial para realizar tu reclamo directamente ante <strong>Energía de Misiones S.A. (EMSA)</strong>:\n\n'
+                f'{explicacion}\n\n'
+                "⚡ <strong>CANALES DIRECTOS Y DETALLES DE ENERGÍA DE MISIONES (EMSA):</strong>\n"
+                "👉 <a href=\"https://wa.me/5493764242514\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-tramite-directo\">"
+                "<i class=\"fa-brands fa-whatsapp me-2\"></i>Abrir WhatsApp Oficial de Reclamos EMSA (3764-242514)</a>\n"
+                "👉 <a href=\"https://www.energiademisiones.com.ar/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"btn-tramite-directo\">"
+                "<i class=\"fa-solid fa-bolt me-2\"></i>Sitio Oficial de Energía de Misiones (energiademisiones.com.ar)</a>\n"
+                "👉 <a href=\"tel:08008883672\" class=\"btn-tramite-directo\">"
+                "<i class=\"fa-solid fa-phone me-2\"></i>Llamar a Guardia Técnica EMSA 24 hs (0800-888-3672)</a>\n\n"
+                "• <strong>Teléfono Guardia Técnica EMSA (24 hs - Gratuito):</strong> <a href=\"tel:08008883672\"><strong>0800-888-3672</strong></a>\n"
+                "• <strong>WhatsApp Guardia y Reclamos Técnicos EMSA:</strong> <a href=\"https://wa.me/5493764242514\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>+54 9 376 424-2514</strong></a> | <strong>WhatsApp Comercial:</strong> (376) 433-4010\n"
+                "• <strong>Portal de Clientes y Autogestión EMSA:</strong> <a href=\"https://clientes.energiademisiones.com.ar/\" target=\"_blank\" rel=\"noopener noreferrer\">https://clientes.energiademisiones.com.ar/</a>\n"
+                "• <strong>Atención Presencial EMSA en CAV Itaembé Guazú:</strong> Oficina comercial y técnica en <strong>Calle Aguará Guazú y Magnolias</strong> (Lunes a Viernes de 07:00 a 18:00 hs). Sede Central EMSA: Calle Rioja N° 2051, Posadas.\n\n"
+                "🏛️ <strong>CANALES DE ALUMBRADO PÚBLICO (MUNICIPALIDAD DE POSADAS - SERVICIOS URBANOS):</strong>\n"
+                "• <strong>Línea CIUDAD Gratuita:</strong> <strong>0800-888-2483</strong> | <strong>WhatsApp Servicios Urbanos:</strong> (376) 443-7012\n"
+                "• <strong>Atención Presencial en CAV Itaembé Guazú:</strong> Delegación Municipal en Calle Aguará Guazú y Magnolias (Lunes a Viernes de 07:00 a 18:00 hs).\n\n"
+                "🏛️ <strong>Fuente Oficial Validada:</strong> Energía de Misiones S.A. (EMSA) - Guardia Técnica y Puesto CAV Itaembé Guazú\n"
+                "📅 <strong>Fecha de Verificación:</strong> 2026-11-08\n\n"
+                "⚠️ <em>Aviso de Derivación: Este servicio es de orientación directa hacia los canales oficiales de Energía de Misiones (EMSA). No es necesario cargar más datos aquí ni se genera un cuestionario adicional.</em>"
+            )
+            return {
+                'tipo_consulta': TIPO_CONSULTA,
+                'es_emergencia': False,
+                'es_emergencia_electrica': False,
+                'es_reclamo': False,
+                'es_consulta': True,
+                'es_derivacion_externa': True,
+                'reclamo_confirmado': False,
+                'area_sugerida': area,
+                'organismo_destino': organismo,
+                'respuesta_texto': cuerpo,
+                'botones_emergencia': [],
+                'tramite_info': None,
+                'organismo_info': org_emsa,
+                'cod_categoria_default': cod_categoria,
+                'contexto_ubicacion': ctx_ubi,
+                'preguntas_seguimiento': None,
+                'resumen_solicitud': None,
+            }
         elif es_obra_muro:
             bloque_instrucciones_muro = (
                 "📝 <strong>INSTRUCCIONES PARA COMPLETAR TU DENUNCIA EN EL FORMULARIO DE ABAJO:</strong>\n"
@@ -2103,6 +2174,24 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
                 f'📍 <strong>Ubicación del reclamo:</strong> {ubicacion_registrada}.\n'
                 f'🛠️ <strong>Gestión programada:</strong> Se programó la {descripcion_intervencion}. El cuerpo de inspectores actuará en el lugar para verificar los decibeles sonométricos y labrar las actas de infracción correspondientes según la <strong>Ordenanza VI – Nº 14</strong>.\n\n'
                 f'📱 <strong>Recordatorio urgente:</strong> Si la música a alto volumen o el ruido molesto se reitera de forma flagrante en este momento, podés reforzar la alerta inmediata indicando tu N° de Ticket {nro_ticket} al WhatsApp oficial de la <strong>Guardia de Ruidos Molestos: 3764-134650</strong> (<a href=\"https://wa.me/5493764134650\" target=\"_blank\" rel=\"noopener noreferrer\">https://wa.me/5493764134650</a>) o a la Línea 911 en horario nocturno.\n\n'
+                f'🔍 Podés consultar el estado de tu ticket en cualquier momento desde este portal con tu DNI o N° <strong>{nro_ticket}</strong>.'
+            )
+        elif es_alumbrado_emsa:
+            cuerpo = (
+                f'¡Excelente, {nombre}! Tu reclamo por foco quemado / luminaria de alumbrado público ha sido <strong>registrado formalmente</strong> '
+                f'bajo el identificador único <strong>{nro_ticket}</strong>.\n\n'
+                f'📌 <strong>¡Anotá o guardá este número!:</strong> Tu N° de Ticket es <strong>{nro_ticket}</strong>. '
+                f'Con este número o con tu <strong>DNI</strong> podés consultar el avance en cualquier momento desde el buscador de este mismo sistema.\n\n'
+                f'📋 <strong>Estado inicial:</strong> PENDIENTE (Pendiente de Validación por Mesa de Entrada).\n'
+                f'🏢 <strong>Área asignada:</strong> {organismo} ({area}).\n'
+                f'📍 <strong>Ubicación del poste / luminaria:</strong> {ubicacion_registrada}.\n'
+                f'🛠️ <strong>Gestión programada:</strong> Se programó la {descripcion_intervencion}.\n\n'
+                f'⚡ <strong>Canales Directos de Energía de Misiones (EMSA) y Alumbrado Público:</strong>\n'
+                f'• <strong>Guardia Técnica EMSA 24 hs:</strong> <a href=\"tel:08008883672\"><strong>0800-888-3672</strong></a>\n'
+                f'• <strong>WhatsApp Oficial EMSA:</strong> <a href=\"https://wa.me/5493764242514\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>3764-242514</strong></a>\n'
+                f'• <strong>Web Oficial EMSA:</strong> <a href=\"https://www.energiademisiones.com.ar/\" target=\"_blank\" rel=\"noopener noreferrer\">https://www.energiademisiones.com.ar/</a>\n'
+                f'• <strong>Oficina Presencial EMSA en CAV Itaembé Guazú:</strong> Calle Aguará Guazú y Magnolias (07:00 a 18:00 hs).\n'
+                f'• <strong>Línea CIUDAD Alumbrado Municipal:</strong> 0800-888-2483 | WhatsApp: (376) 443-7012.\n\n'
                 f'🔍 Podés consultar el estado de tu ticket en cualquier momento desde este portal con tu DNI o N° <strong>{nro_ticket}</strong>.'
             )
         else:

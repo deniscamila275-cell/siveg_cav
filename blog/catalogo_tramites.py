@@ -164,25 +164,36 @@ CATALOGO_TRAMITES = [
     },
     {
         'id': 'habilitaciones_comerciales',
-        'nombre': 'Habilitaciones Comerciales e Industriales y Habilitación Eventual Online',
-        'categoria': 'Comercio e Industria',
-        'organismo_responsable': 'Municipalidad de Posadas - Dirección General de Habilitaciones Comerciales',
-        'descripcion': 'Habilitación Comercial Digital (alta de comercios nuevos, mudanzas, cambios de rubro o transferencias de local) y Habilitación Eventual Online para organizadores de espectáculos o eventos masivos a través del Portal Ciudadano (carga remota de seguros, planos de emergencia, subsanaciones y descarga de certificado digital definitivo).',
+        'nombre': 'Habilitaciones Comerciales, Obras Privadas (Sistema GOP) y Habilitación Eventual Online',
+        'categoria': 'Comercio, Industria y Obras Privadas',
+        'organismo_responsable': 'Municipalidad de Posadas - Dirección General de Habilitaciones Comerciales / Secretaría de Planificación y Obras Privadas (Sistema GOP)',
+        'descripcion': (
+            'Gestión integral para habilitar un negocio o local comercial en Posadas: '
+            '1) Verificación edilicia, planos y Certificado de Funcionamiento Comercial / Uso Conforme ante Obras Privadas (Sistema GOP: https://posadas.gestiondeobrasprivadas.com.ar/ y https://posadas.gov.ar/planurbano/guia-de-tramites/), con atención presencial en el CAV Itaembé Guazú; y '
+            '2) Alta comercial en la Dirección General de Habilitaciones Comerciales (https://posadas.gov.ar/guiatramite y https://datos.posadas.gov.ar/habilitaciones-municipales/), incluyendo comercios nuevos, mudanzas, cambios de rubro y Habilitación Eventual Online para espectáculos o eventos masivos.'
+        ),
         'requisitos': [
-            'DNI del titular o estatuto/poder y CUIT de la razón social.',
-            'Contrato de locación sellado o título de propiedad del local.',
+            'Certificado de Funcionamiento Comercial / Factibilidad de Uso Conforme y planos aprobados o visados en Obras Privadas - Sistema GOP (https://posadas.gestiondeobrasprivadas.com.ar/).',
+            'DNI del titular o estatuto/poder y constancia de CUIT / inscripción en ATM y ARCA (ex AFIP).',
+            'Contrato de locación sellado, comodato o título de propiedad del inmueble / local.',
+            'Libre deuda municipal de Tasa General de Inmuebles (TGI) del local.',
             'Certificado de seguridad contra incendios emitido por Bomberos de la Policía de Misiones.',
-            'Para habilitación eventual: póliza de seguro de responsabilidad civil, plan de contingencia y certificado digital.',
-            'Certificado de aptitud de Bromatología para locales del rubro gastronómico.'
+            'Certificado de aptitud de Bromatología y Carnet Sanitario (se liquida en el CAV Itaembé Guazú) para locales gastronómicos o de alimentos.',
+            'Para habilitación eventual: póliza de seguro de responsabilidad civil, plan de contingencia y certificado digital.'
         ],
-        'enlace_oficial': 'https://datos.posadas.gov.ar/habilitaciones-municipales/',
-        'fecha_verificacion': '2026-11-04',
+        'enlace_oficial': 'https://posadas.gestiondeobrasprivadas.com.ar/',
+        'fecha_verificacion': '2026-11-08',
         'tramite_online': True,
-        'texto_boton': 'Portal de Habilitaciones Comerciales Digitales',
-        'fuente': 'Municipalidad de Posadas - Dirección General de Habilitaciones Comerciales',
-        'palabras_clave': ['habilitacion comercial', 'habilitaciones comerciales', 'habilitacion digital', 'habilitacion eventual', 'evento', 'espectaculo', 'eventos masivos', 'habilitar negocio', 'habilitar local', 'abrir local', 'abrir negocio', 'comercio', 'local comercial', 'bromatologia', 'habilitacion de negocio'],
-        'canales_presenciales': 'San Martín 1579 (Mesa de Entradas) y módulos en sedes CAV Las Heras y CAV Itaembé Guazú.',
-        'telefono_contacto': '0800-888-2483 | (0376) 444-9056'
+        'texto_boton': 'Sistema GOP - Obras Privadas y Funcionamiento Comercial',
+        'fuente': 'Municipalidad de Posadas - Obras Privadas (Sistema GOP) y Dirección General de Habilitaciones Comerciales',
+        'palabras_clave': [
+            'habilitacion comercial', 'habilitaciones comerciales', 'habilitacion digital', 'habilitacion eventual',
+            'evento', 'espectaculo', 'eventos masivos', 'habilitar negocio', 'habilitar un negocio', 'habilitar local',
+            'habilitar comercio', 'habilitar', 'abrir local', 'abrir negocio', 'comercio', 'local comercial',
+            'bromatologia', 'habilitacion de negocio', 'nuegocio', 'nogio', 'negosio', 'negcio', 'neogcio'
+        ],
+        'canales_presenciales': 'Módulo de Obras Privadas y Delegación Municipal en CAV Itaembé Guazú (Calle Aguará Guazú y Magnolias), CAV Las Heras y Edificio Central (San Martín 1579).',
+        'telefono_contacto': '0800-888-2483 (Línea CIUDAD) | (0376) 444-9056'
     },
     {
         'id': 'sem_estacionamiento',
@@ -637,7 +648,7 @@ def buscar_tramite_por_consulta(texto_consulta: str):
             return obtener_tramite_por_id('iprodha_tramites')
         return obtener_tramite_por_id('obras_privadas')
 
-    # 3. Habilitaciones Comerciales e Industriales / Habilitación Eventual Online
+    # 3. Habilitaciones Comerciales e Industriales / Obras Privadas (Funcionamiento Comercial) / Habilitación Eventual Online
     if any(k in t for k in [
         'habilitacion comercial', 'habilitaciones comerciales', 'habilitacion eventual',
         'habilitacion digital', 'habilitacion', 'habilitaciones', 'habilitar negocio',
@@ -645,8 +656,11 @@ def buscar_tramite_por_consulta(texto_consulta: str):
         'eventos masivos', 'comercio', 'local comercial', 'bromatologia', 'habilitacion de negocio',
         'abrir un negocio', 'abrir un local', 'abrir un comercio', 'poner un negocio', 'poner un local',
         'poner un kiosco', 'quise abrir un negocio', 'quiero abrir un negocio', 'iniciar un negocio',
-        'abrir comercio', 'habilitar un negocio', 'negocio', 'kiosco', 'almacen', 'verduleria'
-    ]):
+        'abrir comercio', 'habilitar un negocio', 'negocio', 'nuegocio', 'nogio', 'negosio', 'negcio', 'neogcio',
+        'kiosco', 'almacen', 'verduleria', 'emprendimiento', 'habilitar un', 'habilitar mi', 'quiero habilitar', 'como habilitar'
+    ]) or bool(re.search(r'\b(habilitar|habilito|abrir|poner|iniciar)\b.*?\b(neg\w*|nueg\w*|nog\w*|comer\w*|local\w*|kiosc\w*|almac\w*|tienda\w*|emprend\w*)\b', t)) or (
+        bool(re.search(r'\b(habilitar|habilito)\b', t)) and not any(k in t for k in ['clave', 'medidor', 'luz', 'emsa', 'atm', 'dni', 'licencia'])
+    ):
         return obtener_tramite_por_id('habilitaciones_comerciales')
 
     # 4. Trámites Generales y Comunitarios (Danza, Presupuesto Participativo, Notas varias, Ramas)
@@ -674,8 +688,8 @@ def buscar_tramite_por_consulta(texto_consulta: str):
     ]):
         return obtener_tramite_por_id('tasas_municipales_autogestion')
 
-    # 7. SEM Posadas (Sistema de Estacionamiento Medido)
-    if any(k in t for k in ['sem', 'estacionamiento medido', 'estacionamiento', 'saldo sem', 'app sem', 'pagar sem']):
+    # 7. SEM Posadas (Sistema de Estacionamiento Medido) - usar límite de palabra \bsem\b para no coincidir con "semana"
+    if any(k in t for k in ['estacionamiento medido', 'estacionamiento', 'saldo sem', 'app sem', 'pagar sem']) or bool(re.search(r'\bsem\b', t)):
         return obtener_tramite_por_id('sem_estacionamiento')
 
     # 8. Operativo Descacharrado / Dengue
@@ -706,7 +720,7 @@ def buscar_tramite_por_consulta(texto_consulta: str):
         return obtener_tramite_por_id('multas_transito')
 
     # 14. Patente / Impuesto Automotor
-    if any(k in t for k in ['patente', 'automotor', 'auto', 'moto', 'impuesto', 'atm', 'tasas', 'inmobiliario', 'rentas', 'ipa']):
+    if bool(re.search(r'\b(patente|automotor|auto|moto|impuesto|atm|tasas|inmobiliario|rentas|ipa)\b', t)):
         return obtener_tramite_por_id('patente_automotor')
 
     # 15. IPRODHA (sólo si menciona explícitamente iprodha)

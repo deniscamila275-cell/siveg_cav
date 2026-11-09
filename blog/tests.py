@@ -1844,6 +1844,57 @@ class TramitesCavItaembeGuazuTest(TestCase):
         self.assertEqual(r_panel_despues.context['emergencias_detectadas'], emergencias_previas + 1)
         self.assertContains(r_panel_despues, 'Protocolo 911 activado (sin ticket)')
 
+    def test_consulta_habilitar_negocio_con_errores_tipeo_deriva_a_obras_privadas_y_habilitaciones(self):
+        """Verifica que consultas como 'quiero habilitar un nuegocio, que pasos debo hacer?' o 'quiero habilitar un nogio'
+        orienten a Obras Privadas (Sistema GOP) y Habilitaciones Comerciales con enlaces directos y no caigan en CAV genérico."""
+        for texto in [
+            'quiero habilitar un nuegocio, que pasos debo hacer?',
+            'quiero habilitar un nogio',
+            'quiero habilitar un negocio',
+        ]:
+            r = self.client.post(self.url, {
+                'nombre': 'Regina Caballero',
+                'dni': '38123456',
+                'telefono': '3764123456',
+                'detalle': texto
+            })
+            self.assertEqual(r.status_code, 200)
+            self.assertNotContains(r, 'Atención General al Vecino y Trámites Integrados CAV')
+            self.assertContains(r, 'Obras Privadas')
+            self.assertContains(r, 'Habilitaciones Comerciales')
+            self.assertContains(r, 'https://posadas.gestiondeobrasprivadas.com.ar/')
+            self.assertContains(r, 'https://posadas.gov.ar/planurbano/guia-de-tramites/')
+            self.assertContains(r, 'https://posadas.gov.ar/guiatramite')
+
+    def test_reclamo_foco_quemado_hace_una_semana_no_confunde_con_sem_e_incluye_detalles_emsa(self):
+        """Verifica que 'hace una semana' no dispare SEM (Estacionamiento Medido) y que las consultas de
+        foco quemado / poste quemado / luminarias / oscuro orienten directamente a EMSA sin pedir datos de la vecina ni formulario extra."""
+        for texto in [
+            'hay un foco que esta quemado afuera de mi casa hace una semana, cuando pueden venir a arreglar',
+            'habia un foco o sea del poste de luz luminarias y queria que vengan a areglar porque esta oscuto',
+            'afeura de mi cassa hay un poste quemado, hay mucha oscuridad y aprovechan los chorros',
+        ]:
+            r = self.client.post(self.url, {
+                'nombre': 'Luciana Karajallo',
+                'dni': '38123456',
+                'telefono': '3764123456',
+                'detalle': texto
+            })
+            self.assertEqual(r.status_code, 200)
+            self.assertNotContains(r, 'Sistema de Estacionamiento Medido')
+            self.assertNotContains(r, 'SEM Posadas')
+            self.assertFalse(r.context['es_reclamo'])
+            self.assertTrue(r.context['es_derivacion_externa'])
+            self.assertContains(r, 'Energía de Misiones S.A. (EMSA)')
+            self.assertContains(r, '0800-888-3672')
+            self.assertContains(r, 'https://wa.me/5493764242514')
+            self.assertContains(r, 'https://www.energiademisiones.com.ar/')
+            self.assertNotContains(r, 'Datos de la vecina')
+            self.assertNotContains(r, 'nombre de la vecina')
+            self.assertNotContains(r, 'Resumen Automático de la Solicitud')
+
+
+
 
 
 

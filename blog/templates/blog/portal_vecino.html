@@ -639,10 +639,12 @@
                                         <label for="detalle_confirmar" class="form-label form-label-custom small mb-1">
                                             <i class="fa-solid fa-pen-to-square me-1 text-success"></i>Detalle de la Solicitud / Denuncia: <span class="text-danger fw-bold">*</span>
                                         </label>
-                                        <textarea class="form-control form-control-sm" id="detalle_confirmar" name="detalle" rows="3" placeholder="Detallá lo sucedido. Agregá el nombre de la vecina/o (si lo sabés) y su dirección exacta..." required>{{ detalle_consulta }}</textarea>
+                                        <textarea class="form-control form-control-sm" id="detalle_confirmar" name="detalle" rows="3" placeholder="Detallá lo sucedido con la mayor precisión posible..." required>{{ detalle_consulta }}</textarea>
+                                        {% if 'vecin' in detalle_consulta.lower or 'muro' in detalle_consulta.lower or 'medianera' in detalle_consulta.lower or 'ruido' in detalle_consulta.lower or 'musica' in detalle_consulta.lower %}
                                         <div class="form-text small text-muted">
                                             💡 <strong>Recomendación:</strong> Podés ampliar el relato aquí: agregá si es posible el <strong>nombre de la vecina o vecino</strong> (si lo conocés) y su <strong>dirección o casa/lote lindero</strong> donde amplió el muro.
                                         </div>
+                                        {% endif %}
                                     </div>
 
                                     <div class="row g-2 mb-3">
@@ -661,15 +663,30 @@
                                             <div class="invalid-feedback small">Por favor, indicá tu dirección exacta.</div>
                                         </div>
                                         <div class="col-sm-12">
+                                            {% if 'vecin' in detalle_consulta.lower or 'muro' in detalle_consulta.lower or 'medianera' in detalle_consulta.lower or 'ruido' in detalle_consulta.lower or 'musica' in detalle_consulta.lower %}
                                             <label for="referencias" class="form-label form-label-custom small mb-1">
                                                 <i class="fa-solid fa-landmark me-1 text-primary"></i>Datos de la vecina / Referencias linderas (opcional):
                                             </label>
                                             <input type="text" class="form-control form-control-sm" id="referencias" name="referencias" value="{{ referencias_vecino|default:'' }}" placeholder="Ej: Casa lindera a la derecha, nombre de la vecina, frente a la plaza...">
                                             <div class="form-text small text-muted">Podés indicar el nombre de la vecina/o denunciado y la casa o lote lindero donde amplió el muro.</div>
+                                            {% else %}
+                                            <label for="referencias" class="form-label form-label-custom small mb-1">
+                                                <i class="fa-solid fa-landmark me-1 text-primary"></i>Referencias de ubicación (opcional):
+                                            </label>
+                                            <input type="text" class="form-control form-control-sm" id="referencias" name="referencias" value="{{ referencias_vecino|default:'' }}" placeholder="Ej: Frente a la plaza, esquina con...">
+                                            {% endif %}
                                         </div>
                                     </div>
 
                                     <div class="mb-3">
+                                        <div class="p-2 px-3 mb-2 rounded-3" style="background-color: var(--verde-claro-bg-soft); border: 1px solid var(--verde-claro-bright);">
+                                            <strong class="d-block text-primary-dark small">
+                                                <i class="fa-solid fa-camera me-1 icono-destacado-verde"></i>Ayudanos a ver el problema
+                                            </strong>
+                                            <span class="small text-dark">
+                                                Si tenés una foto/video, adjuntala para que el equipo que revise tu reclamo pueda entender mejor la situación.
+                                            </span>
+                                        </div>
                                         <label for="archivo_adjunto" class="form-label form-label-custom small mb-1">
                                             <i class="fa-solid fa-paperclip me-1"></i>Adjuntar fotografía, video o comprobante (opcional):
                                         </label>
