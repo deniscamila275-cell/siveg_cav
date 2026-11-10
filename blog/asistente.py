@@ -73,11 +73,11 @@ def detectar_emergencia(texto_original: str):
             'constancia de bomberos', 'inspeccion de bomberos', 'curso de incendio',
             'matafuego para auto', 'matafuegos reglamentario', 'vencimiento matafuego'
         ]
-    ) and not any(k in t for k in ['hay fuego', 'se quema', 'ardiendo', 'llamas', 'humo espeso'])
+    ) and not any(k in t for k in ['hay fuego', 'se quema', 'ardiendo', 'llamas', 'humo espeso', 'chisp', 'pelad', 'peligro'])
 
     es_consulta_bajada_comercial = any(
         k in t for k in ['bajada de luz', 'pedir bajada', 'instalar medidor', 'cambio de titularidad', 'factura']
-    ) and not any(k in t for k in ['chisp', 'fuego', 'caido', 'tirado', 'electrocut', 'corriente'])
+    ) and not any(k in t for k in ['chisp', 'fuego', 'caido', 'tirado', 'electrocut', 'corriente', 'pelad', 'pelao', 'cortad', 'suelt', 'peligro', 'corto', 'riesgo', 'colgando', 'descubiert', 'humo'])
 
     if es_tramite_bomberos or es_consulta_bajada_comercial:
         return False, '', {}
@@ -92,7 +92,7 @@ def detectar_emergencia(texto_original: str):
             t
         ))
         riesgo_electrico = bool(re.search(
-            r'(\bchisp\w*|\bfuego\b|\bhumo\b|\bardiendo|\brevento|\bexploto|\belectrificad[oa]|\bcorriente\b|\bdescarga)',
+            r'(\bchisp\w*|\bfuego\b|\bhumo\b|\bardiendo|\brevento|\bexploto|\belectrificad[oa]|\bcorriente\b|\bdescarga|\bpelad[oa]s?|\bpelao\b|\bal descubierto|\bdescubiert[oa]s?|\bsin aislante|\bcortocircuito|\bcorto circuito|\bhaciendo corto|\bsuelt[oa]s?|\bcortad[oa]s?|\bcolgando|\bfogonazo)',
             t
         ))
         # Si el poste tiene luz quemada/apagada y NO tiene riesgo de caída ni eléctrico, NO es emergencia
@@ -114,15 +114,18 @@ def detectar_emergencia(texto_original: str):
     # --------------------------------------------------------------------------
     # Regla 2: Cables de electricidad caídos, tirados, cortados, pelados o chispeando
     # --------------------------------------------------------------------------
-    term_cable = bool(re.search(r'\b(cable|cables|tendido|trifasica|linea electrica|media tension|alta tension)\b', t))
+    term_cable = bool(re.search(
+        r'\b(cable|cables|cavle|cavles|calbe|calbes|tendido|trifasica|linea electrica|media tension|alta tension|acometida|medidor)\b',
+        t
+    ))
     if term_cable:
         cable_peligro = bool(re.search(
-            r'(\btirad[oa]|\bcaid[oa]|\bcortad[oa]|\bsuelt[oa]|\ben el piso|\ben la calle|\ben la vereda|\bcolgando|\bchisp\w*|\bfuego\b|\bpeligro|\bcon corriente|\belectrificad[oa]|\bdescarga|\bpelad[oa]s?|\bal descubierto)',
+            r'(\btirad[oa]s?|\bcaid[oa]s?|\bse cayo|\bcayo|\bcortad[oa]s?|\bsuelt[oa]s?|\ben el piso|\ben el suelo|\ben la calle|\ben la vereda|\bcolgando|\bbaj[oa]s?\b|\ba baja altura|\btocando|\brozando|\bchisp\w*|\bcortocircuito|\bcorto circuito|\bhaciendo corto|\bfuego\b|\bllamas\b|\bhumo\b|\bardiendo|\bquemando\w*|\bpeligro\w*|\briesgo|\bcon corriente|\belectrificad[oa]s?|\bdescarga|\bpatea|\bpelad[oa]s?|\bpelao\b|\bal descubierto|\bdescubiert[oa]s?|\bsin aislante|\bexpuest[oa]s?)',
             t
         ))
         if cable_peligro:
-            es_pelado = bool(re.search(r'\bpelad[oa]s?|\bal descubierto\b', t))
-            titulo_cable = 'Cable Eléctrico Pelado / Expuesto con Riesgo de Descarga' if es_pelado else 'Cable Eléctrico Caído / Cortado en la Vía Pública'
+            es_pelado = bool(re.search(r'\bpelad[oa]s?|\bpelao\b|\bal descubierto|\bdescubiert[oa]s?|\bsin aislante|\bexpuest[oa]s?\b', t))
+            titulo_cable = 'Cable Eléctrico Pelado / Expuesto con Riesgo de Descarga' if es_pelado else 'Cable Eléctrico Caído / Cortado o con Chispas en la Vía Pública'
             return True, 'CABLE_CAIDO', {
                 'titulo': titulo_cable,
                 'tipo_riesgo': 'electrico',
@@ -135,6 +138,23 @@ def detectar_emergencia(texto_original: str):
                 ],
                 'servicios': ['911', 'EMSA']
             }
+
+    # --------------------------------------------------------------------------
+    # Regla 2.5: Chispas, cortocircuito o fuego eléctrico (incluso sin mencionar "cable" o "poste")
+    # --------------------------------------------------------------------------
+    if re.search(r'(\bchisp\w*|\bcortocircuito|\bcorto circuito|\bhaciendo corto|\bfogonazo)', t):
+        return True, 'CABLE_CAIDO', {
+            'titulo': 'Emergencia Eléctrica por Chispas / Cortocircuito Activo',
+            'tipo_riesgo': 'electrico',
+            'recomendaciones': [
+                'Considerá SIEMPRE que existe tensión eléctrica activa y peligro de electrocución o incendio.',
+                'Alejate de inmediato a un mínimo de 15 metros del lugar.',
+                'NO toques cables, postes, medidores ni objetos metálicos cercanos.',
+                'No arrojes agua sobre instalaciones eléctricas con chispas o fuego.',
+                'Mantené alejadas a otras personas y comunicate de inmediato con el 911 y la guardia de EMSA.',
+            ],
+            'servicios': ['911', 'EMSA', 'Bomberos 100']
+        }
 
     # --------------------------------------------------------------------------
     # Regla 3: Riesgo directo de electrocución o descarga eléctrica

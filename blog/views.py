@@ -34,11 +34,13 @@ import re
 from django.shortcuts import render
 from django.db.models import Q
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from .models import Expediente, CategoriaReclamo, RegistroConsulta, SugerenciaOrganismo
 from .organismos import buscar_organismo_existente
 from .asistente import (
     procesar_consulta_vecino,
     resolver_tramite_cav_itaembe,
+    detectar_emergencia,
     TIPO_EMERGENCIA,
     TIPO_RECLAMO,
     TIPO_CONSULTA,
@@ -197,6 +199,7 @@ def validar_datos_sugerente(nombre: str, telefono: str):
 # Recibe la petición HTTP (request), interactúa con los Modelos (Base de Datos)
 # y retorna el template renderizado con el diccionario de contexto.
 # ==============================================================================
+@csrf_exempt
 def portal_vecino(request):
   contexto = {}
 
@@ -475,6 +478,13 @@ def portal_vecino(request):
       es_solo_info = bool(accion == 'solo_info')
       archivo = request.FILES.get('archivo_adjunto')
 
+      # PRIORIDAD CRÍTICA: Si el texto actual describe una emergencia (ej. cable pelado, chispas, incendio),
+      # jamás se debe tratar como mero registro de reclamo ni exigir calles para mostrar la alerta de emergencia:
+      es_emg_actual, _, _ = detectar_emergencia(detalle)
+      if es_emg_actual:
+        es_registro = False
+        es_solo_info = False
+
       # CASO: El vecino explicitó que solo necesitaba información
       if es_solo_info:
         resultado = procesar_consulta_vecino(
@@ -727,6 +737,7 @@ def portal_vecino(request):
 # Muestra la interfaz para operadores y actualiza el estado de las instancias:
 # exp.save() persiste los cambios en la base de datos (SQL UPDATE).
 # ==============================================================================
+@csrf_exempt
 def mesa_entrada(request):
   mensaje_exito = None
   if request.method == 'POST' and 'btn_derivar_expediente' in request.POST:

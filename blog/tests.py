@@ -368,6 +368,47 @@ class EmergenciasElectricasTest(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Emergencia Eléctrica')
+
+    def test_emergencia_cable_pelado_y_chispas_variantes(self):
+        variantes = [
+            'habia un cable pelado y sacaba chispas',
+            'hay un cable pelado en la vereda',
+            'cables pelados en el poste de luz',
+            'un cable sin aislante haciendo cortocircuito',
+            'sale chispas del medidor de luz',
+        ]
+        for texto in variantes:
+            with self.subTest(texto=texto):
+                response = self.client.post(self.url, {
+                    'nombre': 'Carlos Gómez',
+                    'dni': '33445566',
+                    'telefono': '3764556677',
+                    'detalle': texto,
+                })
+                self.assertEqual(response.status_code, 200)
+                self.assertTrue(response.context['es_emergencia'], f"Fallo detección de emergencia para: {texto}")
+                self.assertTrue(response.context['es_emergencia_electrica'], f"Fallo emergencia eléctrica para: {texto}")
+                self.assertContains(response, 'Emergencia Eléctrica')
+                self.assertContains(response, '911')
+                self.assertContains(response, '0800 888 3672')
+
+    def test_emergencia_desde_formulario_confirmacion_prioriza_alerta(self):
+        """Si el vecino edita el texto desde el formulario de confirmación poniendo una emergencia, prioriza la alerta."""
+        response = self.client.post(self.url, {
+            'nombre': 'Carlos Gómez',
+            'dni': '33445566',
+            'telefono': '3764556677',
+            'detalle': 'habia un cable pelado y sacaba chispas',
+            'accion': 'registrar',
+            'confirmar_ticket': '1',
+            'barrio': '',
+            'entre_calles': '',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['es_emergencia'])
+        self.assertTrue(response.context['es_emergencia_electrica'])
+        self.assertFalse(response.context.get('es_reclamo'))
+        self.assertContains(response, 'Emergencia Eléctrica')
         self.assertContains(response, '0800 888 3672')
         self.assertFalse(Expediente.objects.filter(dni_vecino=28123456).exists())
 
