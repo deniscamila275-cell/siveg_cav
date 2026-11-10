@@ -1134,9 +1134,9 @@ def clasificar_consulta(texto: str) -> str:
         r'\b(vecin[oa])\b.*?\b(amplio|construyo|edifico|ocupo|apoyo|hizo una obra|haciendo una obra)\b.*?\b(muro|medianera|pared|casa|terreno)\b',
         r'\b(obra|construccion|ampliacion|amplaicion)\b.*?\b(clandestina|sin permiso|antirreglamentaria|ilegal|sin autorizacion)\b',
         # Habilitación comercial y apertura de negocio (solicitud municipal ante Habilitaciones y Obras Privadas)
-        r'\b(abrir|poner|iniciar|habilitar|habilito|instalar|hacer|quise abrir|quiero abrir|quiero hacer|quiero habilitar|necesito abrir|necesito habilitar|solicito abrir)\b.*?\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|local|kiosco|almacen|verduleria|tienda|emprendimiento)\b',
-        r'\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|local|kiosco|almacen|verduleria|emprendimiento)\b.*?\b(abrir|poner|habilitar|instalar|iniciar|hacer)\b',
-        r'\b(habilitacion comercial|habilitar negocio|habilitar local|abrir un negocio|abrir negocio|poner un negocio|hacer un negocio|hacer negocio|quiero hacer negocio|habilitar un negocio|habilitar mi negocio)\b',
+        r'\b(abrir|poner|iniciar|habilitar|habilito|instalar|hacer|quise abrir|quiero abrir|quiero hacer|quiero habilitar|necesito abrir|necesito habilitar|solicito abrir)\b.*?\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|comer\s+cio|local|kiosco|almacen|verduleria|tienda|emprendimiento)\b',
+        r'\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|comer\s+cio|local|kiosco|almacen|verduleria|emprendimiento)\b.*?\b(abrir|poner|habilitar|instalar|iniciar|hacer)\b',
+        r'\b(habilitacion comercial|habilitar negocio|habilitar local|abrir un negocio|abrir negocio|poner un negocio|hacer un negocio|hacer negocio|quiero hacer negocio|habilitar un negocio|habilitar mi negocio|habilitar un comercio|habilitar un comer\s+cio)\b',
         # Verbos explícitos de reclamo/queja
         r'\b(hacer un reclamo|iniciar reclamo|vengan a arreglar|vengan a areglar|venir a arreglar|venir a areglar|solicito cuadrilla|necesito que arreglen|necesito que areglen|pedir que manden|mandar a limpiar|arreglen el|solicito intervencion)\b',
     ]
@@ -1787,9 +1787,9 @@ def generar_respuesta_reclamo(nombre: str, detalle: str, confirmado: bool = Fals
 
     es_obra_muro = any(k in t for k in ['muro', 'medianera', 'ampliacion', 'amplaicion', 'amplio', 'obra', 'construccion', 'pared']) and any(k in t for k in ['vecin', 'ocupo', 'apoyo', 'rompio', 'clandestin', 'sin permiso', 'antirreglamentar', 'denuncia', 'invasi', 'edifico', 'tiro'])
     es_habilitacion_negocio = (
-        any(k in t for k in ['negocio', 'nuegocio', 'nogio', 'negosio', 'negcio', 'neogcio', 'comercio', 'local', 'kiosco', 'almacen', 'verduleria', 'tienda', 'emprendimiento']) and
+        any(k in t for k in ['negocio', 'nuegocio', 'nogio', 'negosio', 'negcio', 'neogcio', 'comercio', 'comer cio', 'local', 'kiosco', 'almacen', 'verduleria', 'tienda', 'emprendimiento']) and
         any(k in t for k in ['abrir', 'poner', 'iniciar', 'habilitar', 'habilito', 'emprender', 'instalar', 'quise', 'quiero', 'solicitud', 'habilitacion', 'hacer', 'pasos'])
-    ) or bool(re.search(r'\b(abrir|poner|iniciar|habilitar|habilito|instalar|hacer|quise abrir|quiero abrir|quiero hacer|quiero habilitar)\b.*?\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|local|kiosco|almacen|verduleria|tienda|emprendimiento)\b', t)) or (
+    ) or bool(re.search(r'\b(abrir|poner|iniciar|habilitar|habilito|instalar|hacer|quise abrir|quiero abrir|quiero hacer|quiero habilitar)\b.*?\b(negocio|nuegocio|nogio|negosio|negcio|neogcio|comercio|comer\s+cio|local|kiosco|almacen|verduleria|tienda|emprendimiento)\b', t)) or (
         bool(re.search(r'\b(quiero habilitar|necesito habilitar|para habilitar|habilitar un|habilitar mi)\b', t)) and not any(k in t for k in ['clave', 'medidor', 'luz', 'emsa', 'atm', 'dni', 'licencia'])
     )
 

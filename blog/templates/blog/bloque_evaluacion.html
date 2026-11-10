@@ -18,10 +18,19 @@
             </span>
         {% else %}
             <!-- Formulario interactivo de evaluación con ancla para mantener visibilidad -->
-            <form method="POST" action="#bloque-evaluacion-consulta" class="d-flex flex-wrap gap-2 mb-0">
+            <form method="POST" action="{% url 'portal_vecino' %}#bloque-evaluacion-consulta" class="d-flex flex-wrap gap-2 mb-0">
                 {% csrf_token %}
                 <input type="hidden" name="btn_evaluar_consulta" value="1">
                 <input type="hidden" name="id_consulta" value="{{ id_consulta }}">
+                <input type="hidden" name="detalle_consulta" value="{{ detalle_consulta|default:'' }}">
+                <input type="hidden" name="nro_ticket" value="{{ nro_ticket|default:'' }}">
+                <input type="hidden" name="nombre_vecino" value="{{ nombre_vecino|default:'' }}">
+                <input type="hidden" name="dni_vecino" value="{{ dni_vecino|default:'' }}">
+                <input type="hidden" name="telefono_vecino" value="{{ telefono_vecino|default:'' }}">
+                <input type="hidden" name="barrio_vecino" value="{{ barrio_vecino|default:'' }}">
+                <input type="hidden" name="entre_calles_vecino" value="{{ entre_calles_vecino|default:'' }}">
+                <input type="hidden" name="referencias_vecino" value="{{ referencias_vecino|default:'' }}">
+                {% if solo_info %}<input type="hidden" name="solo_info" value="1">{% endif %}
                 <button type="submit" name="evaluacion" value="SI" class="btn btn-sm btn-success fw-bold px-3 py-2 shadow-sm d-flex align-items-center gap-1" title="Sí, resolví mi consulta">
                     <i class="fa-solid fa-thumbs-up"></i> Sí
                 </button>

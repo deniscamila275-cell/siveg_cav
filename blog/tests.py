@@ -762,6 +762,48 @@ class EvaluacionSatisfaccionTest(TestCase):
         self.assertIsNotNone(reg.fecha_evaluacion)
         self.assertContains(r2, '¡Muchas gracias por tu valoración!')
 
+    def test_evaluacion_reclamo_bache_con_ticket_funciona_para_si_parcial_y_no(self):
+        """Verifica que al crear un ticket de reclamo (ej. bache) y puntuar 'SI', 'PARCIAL' o 'NO' no falle y registre las 3 valoraciones en estadísticas."""
+        for idx, valor in enumerate(['PARCIAL', 'SI', 'NO'], start=1):
+            dni_str = f'3610020{idx}'
+            r_ticket = self.client.post(self.url, {
+                'nombre': 'Juan Carlos Pérez',
+                'dni': dni_str,
+                'telefono': '3764187444',
+                'detalle': f'Hay un bache grande en la calle frente al lote {idx}',
+                'barrio': 'Itaembé Guazú',
+                'entre_calles': 'Las Magnolias y Aguará Guazú',
+                'accion': 'registrar',
+            })
+            self.assertEqual(r_ticket.status_code, 200)
+            id_consulta = r_ticket.context['id_consulta']
+            nro_ticket = r_ticket.context['nro_ticket']
+            self.assertIsNotNone(id_consulta)
+            self.assertIsNotNone(nro_ticket)
+
+            # Puntuar la valoración (PARCIAL, SI, NO) luego de haber generado el ticket
+            r_eval = self.client.post(self.url, {
+                'btn_evaluar_consulta': '1',
+                'id_consulta': id_consulta,
+                'evaluacion': valor,
+            })
+            self.assertEqual(r_eval.status_code, 200)
+            self.assertContains(r_eval, '¡Muchas gracias por tu valoración!')
+            self.assertContains(r_eval, nro_ticket)
+            self.assertContains(r_eval, 'Juan Carlos Pérez')
+
+            reg = RegistroConsulta.objects.get(identificador_consulta=id_consulta)
+            self.assertEqual(reg.evaluacion_vecino, valor)
+            self.assertIsNotNone(reg.fecha_evaluacion)
+
+        # Verificar que el Panel Gerencial reciba y contabilice correctamente SI, PARCIAL y NO
+        r_panel = self.client.get(reverse('panel_gerencial'))
+        self.assertEqual(r_panel.status_code, 200)
+        self.assertEqual(r_panel.context['satisfaccion_parcial'], 1)
+        self.assertEqual(r_panel.context['satisfaccion_si'], 1)
+        self.assertEqual(r_panel.context['satisfaccion_no'], 1)
+        self.assertEqual(r_panel.context['total_evaluadas'], 3)
+
 
 class SugerenciaOrganismoTest(TestCase):
     def setUp(self):

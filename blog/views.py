@@ -273,60 +273,135 @@ def portal_vecino(request):
     if 'btn_evaluar_consulta' in request.POST:
       id_consulta = request.POST.get('id_consulta', '').strip()
       evaluacion = request.POST.get('evaluacion', '').strip().upper()
-      if id_consulta and evaluacion in ['SI', 'PARCIAL', 'NO']:
-        reg = RegistroConsulta.objects.filter(identificador_consulta=id_consulta).first()
-        if reg:
-          # Mutación de atributos de la instancia y persistencia ORM:
-          reg.evaluacion_vecino = evaluacion
-          reg.fecha_evaluacion = timezone.now()
-          reg.save()
+      if evaluacion not in ['SI', 'PARCIAL', 'NO']:
+        evaluacion = 'SI'
 
-          # Reconstrucción del contexto oficial enriquecido para mantener enlaces y botones activos:
-          resultado_extra = procesar_consulta_vecino(
-              nombre='',
-              detalle=reg.texto_consultado,
-              datos_ubicacion={'barrio': reg.barrio_detectado or ''}
+      reg = RegistroConsulta.objects.filter(identificador_consulta=id_consulta).first() if id_consulta else None
+      nro_ticket_post = request.POST.get('nro_ticket', '').strip()
+      detalle_post = request.POST.get('detalle_consulta', '').strip()
+      barrio_post = request.POST.get('barrio_vecino', '').strip()
+
+      if not reg and detalle_post:
+        if not id_consulta:
+          id_consulta = f"CNS-{timezone.now().strftime('%Y%m%d')}-{random.randint(1000, 9999)}"
+        exp_asoc = Expediente.objects.filter(nro_expediente=nro_ticket_post).first() if nro_ticket_post else None
+        res_temp = procesar_consulta_vecino(
+            nombre=request.POST.get('nombre_vecino', '').strip(),
+            detalle=detalle_post,
+            confirmado=bool(exp_asoc),
+            nro_ticket=exp_asoc.nro_expediente if exp_asoc else None,
+            datos_ubicacion={'barrio': barrio_post},
+        )
+        try:
+          reg = RegistroConsulta.objects.create(
+              identificador_consulta=id_consulta,
+              tipo_consulta=res_temp['tipo_consulta'],
+              categoria=res_temp.get('area_sugerida') or res_temp.get('organismo_destino') or 'General',
+              texto_consultado=detalle_post,
+              respuesta_brindada=res_temp['respuesta_texto'],
+              fuente_informacion='Base de Conocimiento Oficial SIGEV',
+              resultado='TICKET_REGISTRADO' if exp_asoc else 'ASESORAMIENTO',
+              ticket_asociado=exp_asoc,
+              barrio_detectado=barrio_post,
           )
+        except Exception:
+          reg = RegistroConsulta.objects.order_by('-id').first()
 
-          eval_nombre = ''
-          eval_dni = ''
-          eval_tel = ''
-          eval_exp = reg.ticket_asociado
-          if eval_exp:
-            eval_nombre = eval_exp.nombre_vecino
-            eval_dni = eval_exp.dni_vecino
-            eval_tel = eval_exp.telefono_vecino
+      if reg:
+        # Mutación de atributos de la instancia y persistencia ORM:
+        reg.evaluacion_vecino = evaluacion
+        reg.fecha_evaluacion = timezone.now()
+        reg.save()
 
-          es_rec = bool(eval_exp) or reg.resultado == 'TICKET_REGISTRADO'
-          es_emg = reg.resultado == 'EMERGENCIA' or resultado_extra.get('es_emergencia', False)
+        eval_exp = reg.ticket_asociado
+        if not eval_exp and nro_ticket_post:
+          eval_exp = Expediente.objects.filter(nro_expediente=nro_ticket_post).first()
 
-          contexto.update({
-              'evaluacion_guardada': True,
-              'evaluacion_valor': evaluacion,
-              'mensaje_evaluacion': (
-                  "¡Muchas gracias por tu valoración! Tu respuesta nos ayuda a optimizar la atención ciudadana en el CAV Sede Itaembé Guazú."
-              ),
-              'id_consulta': id_consulta,
-              'respuesta_ia': reg.respuesta_brindada,
-              'tipo_consulta': reg.tipo_consulta,
-              'detalle_consulta': reg.texto_consultado,
-              'tramite_info': resultado_extra.get('tramite_info'),
-              'organismo_info': resultado_extra.get('organismo_info'),
-              'es_derivacion_externa': resultado_extra.get('es_derivacion_externa', False),
-              'es_emergencia': es_emg,
-              'es_emergencia_electrica': resultado_extra.get('es_emergencia_electrica', False),
-              'botones_emergencia': resultado_extra.get('botones_emergencia', []),
-              'es_reclamo': es_rec,
-              'reclamo_confirmado': es_rec,
-              'nro_ticket': eval_exp.nro_expediente if eval_exp else None,
-              'expediente_obj': eval_exp,
-              'nombre_vecino': eval_nombre,
-              'dni_vecino': eval_dni,
-              'telefono_vecino': eval_tel,
-              'organismo_destino': resultado_extra.get('organismo_destino') or reg.categoria,
-              'area_sugerida': resultado_extra.get('area_sugerida'),
-          })
-          return render(request, 'blog/portal_vecino.html', contexto)
+        if eval_exp:
+          eval_nombre = eval_exp.nombre_completo
+          eval_dni = str(eval_exp.dni_vecino)
+          eval_tel = eval_exp.telefono_contacto
+          eval_barrio = eval_exp.barrio or reg.barrio_detectado or ''
+          eval_calles = eval_exp.entre_calles or ''
+          eval_ref = eval_exp.referencias or ''
+        else:
+          eval_nombre = request.POST.get('nombre_vecino', '').strip()
+          eval_dni = request.POST.get('dni_vecino', '').strip()
+          eval_tel = request.POST.get('telefono_vecino', '').strip()
+          eval_barrio = barrio_post or reg.barrio_detectado or ''
+          eval_calles = request.POST.get('entre_calles_vecino', '').strip()
+          eval_ref = request.POST.get('referencias_vecino', '').strip()
+
+        # Reconstrucción del contexto oficial enriquecido para mantener enlaces y botones activos:
+        resultado_extra = procesar_consulta_vecino(
+            nombre=eval_nombre,
+            detalle=reg.texto_consultado,
+            datos_ubicacion={
+                'barrio': eval_barrio,
+                'entre_calles': eval_calles,
+                'referencias': eval_ref,
+            }
+        )
+
+        es_solo_info_eval = request.POST.get('solo_info', '').strip() == '1'
+        es_rec_confirmado = bool(eval_exp) or reg.resultado == 'TICKET_REGISTRADO'
+        es_rec = False if es_solo_info_eval else (
+            es_rec_confirmado or reg.tipo_consulta == 'RECLAMO' or resultado_extra.get('es_reclamo', False)
+        )
+        es_emg = reg.resultado == 'EMERGENCIA' or resultado_extra.get('es_emergencia', False)
+
+        # Reconstruir la respuesta exacta (con o sin ticket confirmado)
+        if es_rec_confirmado and eval_exp:
+          resultado_ticket = procesar_consulta_vecino(
+              nombre=eval_nombre,
+              detalle=reg.texto_consultado,
+              confirmado=True,
+              nro_ticket=eval_exp.nro_expediente,
+              datos_ubicacion={
+                  'barrio': eval_barrio,
+                  'entre_calles': eval_calles,
+                  'referencias': eval_ref,
+              },
+          )
+          respuesta_mostrar = resultado_ticket.get('respuesta_texto') or reg.respuesta_brindada
+        else:
+          respuesta_mostrar = resultado_extra.get('respuesta_texto') or reg.respuesta_brindada
+
+        etiquetas_eval = {'SI': 'Sí (SI)', 'PARCIAL': 'Parcialmente', 'NO': 'No'}
+
+        contexto.update({
+            'evaluacion_guardada': True,
+            'evaluacion_valor': etiquetas_eval.get(evaluacion, evaluacion),
+            'mensaje_evaluacion': (
+                "¡Muchas gracias por tu valoración! Tu respuesta nos ayuda a optimizar la atención ciudadana en el CAV Sede Itaembé Guazú."
+            ),
+            'id_consulta': reg.identificador_consulta,
+            'registro_consulta': reg,
+            'respuesta_ia': respuesta_mostrar,
+            'tipo_consulta': reg.tipo_consulta,
+            'detalle_consulta': reg.texto_consultado,
+            'tramite_info': resultado_extra.get('tramite_info'),
+            'organismo_info': resultado_extra.get('organismo_info'),
+            'es_derivacion_externa': resultado_extra.get('es_derivacion_externa', False),
+            'es_emergencia': es_emg,
+            'es_emergencia_electrica': resultado_extra.get('es_emergencia_electrica', False),
+            'botones_emergencia': resultado_extra.get('botones_emergencia', []),
+            'es_reclamo': es_rec,
+            'es_consulta': resultado_extra.get('es_consulta', False),
+            'reclamo_confirmado': es_rec_confirmado,
+            'solo_info': es_solo_info_eval,
+            'nro_ticket': eval_exp.nro_expediente if eval_exp else None,
+            'expediente_obj': eval_exp,
+            'nombre_vecino': eval_nombre,
+            'dni_vecino': eval_dni,
+            'telefono_vecino': eval_tel,
+            'barrio_vecino': eval_barrio,
+            'entre_calles_vecino': eval_calles,
+            'referencias_vecino': eval_ref,
+            'organismo_destino': (eval_exp.organismo_destino if eval_exp and eval_exp.organismo_destino else None) or resultado_extra.get('organismo_destino') or reg.categoria,
+            'area_sugerida': resultado_extra.get('area_sugerida'),
+        })
+      return render(request, 'blog/portal_vecino.html', contexto)
 
     # --- CONSULTA A BASE DE DATOS (ORM QuerySet / Colección de Objetos): Buscar Trámite ---
     # Recupera colecciones de instancias de la clase Expediente filtrando por columnas de la BD:

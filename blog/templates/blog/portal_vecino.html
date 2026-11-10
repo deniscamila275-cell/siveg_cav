@@ -1456,6 +1456,18 @@
                         e.preventDefault();
                         return false;
                     }
+                    // Preservar el name/value del botón presionado antes de deshabilitarlo
+                    if (e.submitter && e.submitter.name) {
+                        let hiddenBtnInput = form.querySelector('input[type="hidden"][data-submitter-clone="1"]');
+                        if (!hiddenBtnInput) {
+                            hiddenBtnInput = document.createElement('input');
+                            hiddenBtnInput.type = 'hidden';
+                            hiddenBtnInput.setAttribute('data-submitter-clone', '1');
+                            form.appendChild(hiddenBtnInput);
+                        }
+                        hiddenBtnInput.name = e.submitter.name;
+                        hiddenBtnInput.value = e.submitter.value;
+                    }
                     formularioEnviandose = true;
                     setTimeout(function() {
                         const botones = form.querySelectorAll('button[type="submit"]');
