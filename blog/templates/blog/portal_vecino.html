@@ -1224,29 +1224,38 @@
 
                 <!-- Te indico cómo llegar y Mapita Google Maps -->
                 <div class="pt-3">
-                    <div class="d-inline-flex align-items-center justify-content-center gap-2 px-3 py-2 rounded-pill mb-3 shadow-sm border" 
-                         style="background: linear-gradient(135deg, #ffffff 0%, #faf5ec 100%); border-color: var(--border-beige) !important;">
+                    <a href="https://www.google.com/maps/search/?api=1&query=CAV+Itaemb%C3%A9+Guaz%C3%BA,+Aguar%C3%A1+Guaz%C3%BA+y+Magnolias,+Posadas,+Misiones" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="d-inline-flex align-items-center justify-content-center gap-2 px-3 py-2 rounded-pill mb-3 shadow-sm border text-decoration-none" 
+                       style="background: linear-gradient(135deg, #ffffff 0%, #faf5ec 100%); border-color: var(--border-beige) !important;">
                         <i class="fa-solid fa-map-location-dot text-success fs-5"></i>
                         <span class="fw-bold" style="color: var(--verde-oscuro-text); font-size: 1.05rem; letter-spacing: 0.2px;">
                             ¡Te indico cómo llegar en Google Maps!
                         </span>
-                        <span class="anim-dedo-abajo fs-5 text-warning" title="Mirá el mapa abajo">
+                        <span class="anim-dedo-abajo fs-5 text-warning" title="Hacé clic para abrir en Google Maps">
                             <i class="fa-solid fa-hand-point-down"></i>
                         </span>
-                    </div>
+                    </a>
 
-                    <!-- Pequeño mapa interactivo embebido -->
-                    <div class="rounded-3 overflow-hidden shadow-sm mb-0 border mx-auto" style="max-width: 620px; height: 220px;">
+                    <!-- Pequeño mapa interactivo embebido que al hacer clic te lleva a Google Maps -->
+                    <div class="rounded-3 overflow-hidden shadow-sm mb-0 border mx-auto position-relative" style="max-width: 620px; height: 220px;">
                         <iframe 
                             title="Mapa de ubicación Sede CAV Itaembé Guazú"
                             width="100%" 
                             height="100%" 
-                            style="border:0;" 
+                            style="border:0; pointer-events: none;" 
                             loading="lazy" 
                             allowfullscreen 
                             referrerpolicy="no-referrer-when-downgrade" 
-                            src="https://maps.google.com/maps?q=Calle+Aguar%C3%A1+Guaz%C3%BA+y+Magnolias,+Posadas,+Misiones&t=&z=16&ie=UTF8&iwloc=&output=embed">
+                            src="https://maps.google.com/maps?q=CAV+Itaemb%C3%A9+Guaz%C3%BA,+Aguar%C3%A1+Guaz%C3%BA+y+Magnolias,+Posadas,+Misiones&t=&z=16&ie=UTF8&iwloc=&output=embed">
                         </iframe>
+                        <a href="https://www.google.com/maps/search/?api=1&query=CAV+Itaemb%C3%A9+Guaz%C3%BA,+Aguar%C3%A1+Guaz%C3%BA+y+Magnolias,+Posadas,+Misiones" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           title="Hacé clic para abrir CAV Itaembé Guazú (Aguará Guazú y Magnolias, Posadas) en Google Maps"
+                           style="position: absolute; inset: 0; z-index: 5; display: block; cursor: pointer;">
+                        </a>
                     </div>
                 </div>
 
