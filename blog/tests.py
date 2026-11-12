@@ -1976,6 +1976,36 @@ class TramitesCavItaembeGuazuTest(TestCase):
             self.assertNotContains(r, 'nombre de la vecina')
             self.assertNotContains(r, 'Resumen Automático de la Solicitud')
 
+    def test_unificacion_claves_primarias_id_en_todas_las_tablas(self):
+        """Verifica que las 4 tablas principales utilicen 'id' como PK y cod_categoria sea UNIQUE."""
+        for modelo in (CategoriaReclamo, Expediente, RegistroConsulta, SugerenciaOrganismo):
+            self.assertEqual(modelo._meta.pk.name, 'id', f"{modelo.__name__} debe usar 'id' como PK")
+
+        campo_cod = CategoriaReclamo._meta.get_field('cod_categoria')
+        self.assertTrue(campo_cod.unique)
+        self.assertFalse(campo_cod.primary_key)
+
+        cat = CategoriaReclamo.objects.create(
+            cod_categoria=999,
+            nombre_categoria='Categoría Test PK',
+            organismo_default='Mesa de Entrada'
+        )
+        self.assertIsNotNone(cat.id)
+        self.assertEqual(cat.pk, cat.id)
+        self.assertNotEqual(cat.id, 999)
+
+        exp = Expediente.objects.create(
+            nro_expediente='TCK-TEST-PK',
+            dni_vecino=35111222,
+            nombre_completo='Vecino Prueba PK',
+            telefono_contacto='3764112233',
+            categoria=cat,
+            detalle_consulta='Reclamo de prueba para verificar FK hacia CategoriaReclamo.id'
+        )
+        self.assertEqual(exp.categoria_id, cat.id)
+        self.assertEqual(exp.categoria.cod_categoria, 999)
+
+
 
 
 

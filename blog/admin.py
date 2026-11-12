@@ -25,4 +25,4 @@ class RegistroConsultaAdmin(admin.ModelAdmin):
 
 @admin.register(CategoriaReclamo)
 class CategoriaReclamoAdmin(admin.ModelAdmin):
-    list_display = ('cod_categoria', 'nombre_categoria', 'organismo_default')
+    list_display = ('id', 'cod_categoria', 'nombre_categoria', 'organismo_default')

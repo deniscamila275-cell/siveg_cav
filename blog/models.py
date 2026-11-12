@@ -53,8 +53,9 @@ class CategoriaReclamo(ModeloBaseAuditoria):
     """
 
     # --- ATRIBUTOS DE CLASE / COLUMNAS EN BASE DE DATOS (Mapeo ORM) ---
-    # En Django ORM, cada atributo definido a nivel de clase representa una COLUMNA física en la tabla:
-    cod_categoria = models.IntegerField(primary_key=True)   # Columna: Clave Primaria (Primary Key / PK)
+    # En Django ORM, cada atributo definido a nivel de clase representa una COLUMNA física en la tabla.
+    # La clave primaria 'id' (BigAutoField) es generada automáticamente por Django para unificar todas las tablas:
+    cod_categoria = models.IntegerField(unique=True)        # Columna: Código único de negocio (UNIQUE)
     nombre_categoria = models.CharField(max_length=100)     # Columna: VARCHAR(100) - Nombre descriptivo
     organismo_default = models.CharField(max_length=100, default='Obras Públicas') # Columna: Área predeterminada
 
